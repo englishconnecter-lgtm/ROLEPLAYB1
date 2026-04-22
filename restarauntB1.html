@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ordering in a Restaurant — B1 Lesson</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f2eb;
+    --bg-soft: #fbf7f1;
+    --surface: rgba(255,255,255,0.92);
+    --surface-strong: #ffffff;
+    --surface-muted: #fffaf4;
+    --text: #2a221c;
+    --text-soft: #6f6257;
+    --text-faint: #9a8d82;
+    --border: rgba(96, 67, 38, 0.14);
+    --border-strong: rgba(96, 67, 38, 0.22);
+    --shadow: 0 18px 48px rgba(84, 53, 24, 0.12);
+    --shadow-soft: 0 10px 30px rgba(84, 53, 24, 0.08);
+    --blue: #2f73c9;
+    --blue-dark: #1f5698;
+    --blue-soft: #edf5ff;
+    --green: #4a8f3b;
+    --green-soft: #eef8e9;
+    --amber: #b36b11;
+    --amber-soft: #fff2de;
+    --red: #c24c43;
+    --red-soft: #fdefee;
+    --wine: #7a3e35;
+    --wine-soft: #f7ebe8;
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 28px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17120e;
+      --bg-soft: #211811;
+      --surface: rgba(34,24,18,0.9);
+      --surface-strong: #241912;
+      --surface-muted: #2b1e16;
+      --text: #f8efe7;
+      --text-soft: #ccb8a6;
+      --text-faint: #9e8d80;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.16);
+      --shadow: 0 18px 48px rgba(0,0,0,0.28);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.2);
+      --blue: #76b1ff;
+      --blue-dark: #5e9cf0;
+      --blue-soft: rgba(50, 105, 182, 0.18);
+      --green: #97d17b;
+      --green-soft: rgba(88, 132, 63, 0.18);
+      --amber: #ffbe69;
+      --amber-soft: rgba(179, 107, 17, 0.16);
+      --red: #ff958b;
+      --red-soft: rgba(194, 76, 67, 0.18);
+      --wine: #e6a199;
+      --wine-soft: rgba(122, 62, 53, 0.18);
+    }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(179,107,17,0.14), transparent 28%),
+      radial-gradient(circle at top right, rgba(122,62,53,0.12), transparent 24%),
+      linear-gradient(180deg, var(--bg-soft), var(--bg));
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 18px 56px;
+  }
+
+  .outer { max-width: 920px; margin: 0 auto; }
+
+  .page-header {
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(80,42,23,0.97), rgba(122,62,53,0.9)),
+      linear-gradient(135deg, #5c2f1e, #8d4c37);
+    color: white;
+    text-align: left;
+    margin-bottom: 22px;
+    padding: 34px 30px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .page-header::before,
+  .page-header::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  .page-header::before {
+    width: 280px;
+    height: 280px;
+    right: -80px;
+    top: -110px;
+    background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 68%);
+  }
+
+  .page-header::after {
+    width: 220px;
+    height: 220px;
+    left: -50px;
+    bottom: -120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 70%);
+  }
+
+  .page-header h1 {
+    position: relative;
+    z-index: 1;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.08;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.03em;
+    max-width: 620px;
+  }
+
+  .page-header p {
+    position: relative;
+    z-index: 1;
+    font-size: 15px;
+    color: rgba(255,255,255,0.84);
+    margin-bottom: 18px;
+  }
+
+  .page-header p::before {
+    content: 'Interactive lesson';
+    display: inline-block;
+    margin-right: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    vertical-align: middle;
+  }
+
+  .hero-spotlight {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 22px;
+    align-items: stretch;
+    margin: 0 0 26px;
+  }
+
+  .hero-image-card {
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    min-height: 280px;
+  }
+
+  .hero-image-card img {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-copy-card {
+    background: linear-gradient(180deg, var(--surface-strong), var(--surface-muted));
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-soft);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 10px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wine);
+    background: var(--wine-soft);
+    border: 1px solid rgba(122,62,53,0.15);
+    border-radius: 999px;
+  }
+
+  .hero-copy-card h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(1.5rem, 2.6vw, 2.15rem);
+    line-height: 1.12;
+    margin-bottom: 10px;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .hero-copy-card p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text-soft);
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .hero-stat {
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+
+  .hero-stat strong {
+    display: block;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .lesson-wrap {
+    backdrop-filter: blur(14px);
+    background: var(--surface);
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 16px;
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+  }
+
+  .step-dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-soft);
+    background: var(--surface-strong);
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+
+  .step-dot:hover { transform: translateY(-1px); }
+  .step-dot.active {
+    background: linear-gradient(135deg, var(--wine), #a15244);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 10px 20px rgba(122,62,53,0.28);
+  }
+  .step-dot.done {
+    background: linear-gradient(135deg, #78b95c, var(--green));
+    color: #fff;
+    border-color: transparent;
+  }
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    border-radius: 999px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; animation: fadeUp .28s ease; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--wine);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: var(--wine-soft);
+    border: 1px solid rgba(122,62,53,0.12);
+  }
+
+  .section-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin-bottom: 22px;
+  }
+
+  .card, .card-muted {
+    border-radius: 22px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card { background: var(--surface-strong); }
+  .card-muted { background: linear-gradient(180deg, var(--surface-muted), rgba(255,255,255,0.3)); }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .vocab-chip {
+    background: linear-gradient(180deg, var(--blue-soft), rgba(255,255,255,0.82));
+    border: 1px solid rgba(47,115,201,0.18);
+    border-radius: 14px;
+    padding: 11px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    text-align: center;
+    cursor: pointer;
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    user-select: none;
+    box-shadow: 0 8px 18px rgba(47,115,201,0.08);
+  }
+
+  .vocab-chip:hover { transform: translateY(-1px); box-shadow: 0 12px 22px rgba(47,115,201,0.12); }
+  .vocab-chip.used {
+    background: var(--surface-muted);
+    color: var(--text-faint);
+    border-color: var(--border);
+    opacity: 0.58;
+    box-shadow: none;
+  }
+  .vocab-chip.selected {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(47,115,201,0.18), 0 14px 24px rgba(47,115,201,0.12);
+    transform: translateY(-1px);
+  }
+
+  .gap-sentence { font-size: 15px; color: var(--text); line-height: 2.25; margin-bottom: 12px; }
+
+  .gap {
+    display: inline-block;
+    min-width: 118px;
+    min-height: 28px;
+    border-bottom: 2px solid var(--blue);
+    margin: 0 5px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--blue-dark);
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: bottom;
+    padding: 0 6px;
+    transition: all .16s ease;
+    border-radius: 8px 8px 0 0;
+    background: rgba(47,115,201,0.04);
+  }
+
+  .gap.correct { border-bottom-color: var(--green); color: #255c1d; background: var(--green-soft); }
+  .gap.wrong { border-bottom-color: var(--red); color: #992e2e; background: var(--red-soft); animation: shake 0.3s; }
+
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+  .feedback-msg {
+    font-size: 13px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    display: none;
+    border: 1px solid transparent;
+  }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: var(--green-soft); color: #255c1d; border-color: rgba(74,143,59,0.2); }
+  .feedback-msg.err { background: var(--red-soft); color: #992e2e; border-color: rgba(194,76,67,0.18); }
+
+  .drill-q { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.65; }
+  .drill-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .opt-btn {
+    background: var(--surface-strong);
+    border: 1px solid var(--border-strong);
+    border-radius: 15px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    line-height: 1.55;
+    box-shadow: var(--shadow-soft);
+  }
+  .opt-btn:hover:not(:disabled) { background: var(--surface-muted); transform: translateY(-1px); }
+  .opt-btn.correct { background: var(--green-soft); border-color: rgba(74,143,59,0.25); color: #255c1d; }
+  .opt-btn.wrong { background: var(--red-soft); border-color: rgba(194,76,67,0.24); color: #992e2e; }
+  .opt-btn:disabled { cursor: default; }
+
+  .progress-counter { font-size: 12px; color: var(--text-soft); margin-bottom: 10px; }
+  .nav-row { display: flex; gap: 10px; margin-top: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .btn {
+    background: var(--surface-strong);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .btn:hover { background: var(--surface-muted); transform: translateY(-1px); }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--wine), #a15244);
+    color: #fff;
+    border-color: transparent;
+  }
+  .btn.primary:hover { filter: brightness(1.03); }
+
+  .time-badge {
+    font-size: 11px;
+    color: var(--text-soft);
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .roleplay-box, .int-box {
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-left: 4px solid;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .roleplay-box { background: var(--blue-soft); border-left-color: var(--blue); }
+  .int-box { background: var(--green-soft); border-left-color: var(--green); }
+
+  .roleplay-label, .int-label, .menu-section-title, .role-card-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .roleplay-label { color: var(--blue-dark); }
+  .int-label { color: #2d6b25; }
+
+  .roleplay-text, .int-text, .role-card p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .roleplay-text, .role-card-a p { color: var(--blue-dark); }
+  .int-text, .role-card-b p { color: #2d6b25; }
+
+  .tip-box {
+    background: var(--amber-soft);
+    border: 1px solid rgba(179,107,17,0.2);
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #7a4a10;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .score-circle {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 3px solid var(--wine);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto 18px;
+    background: var(--wine-soft);
+  }
+
+  .score-num { font-size: 24px; font-weight: 700; color: var(--wine); }
+  .score-lbl { font-size: 10px; color: var(--text-soft); }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    border: 1px solid transparent;
+  }
+  .tag-blue { background: var(--blue-soft); color: var(--blue-dark); border-color: rgba(47,115,201,0.16); }
+  .tag-green { background: var(--green-soft); color: #2d6b25; border-color: rgba(74,143,59,0.16); }
+  .tag-amber { background: var(--amber-soft); color: #7a4a10; border-color: rgba(179,107,17,0.16); }
+
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  .bullet-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .bullet-dot { margin-top: 7px; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .explain-box {
+    font-size: 13px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    margin-top: 8px;
+    display: none;
+  }
+
+  .role-card-grid, .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .role-card {
+    border-radius: 20px;
+    padding: 16px 18px;
+    border: 1px solid;
+    box-shadow: var(--shadow-soft);
+  }
+  .role-card-a { background: var(--blue-soft); border-color: rgba(47,115,201,0.16); }
+  .role-card-b { background: var(--green-soft); border-color: rgba(74,143,59,0.16); }
+
+  .menu-section {
+    background: linear-gradient(180deg, var(--surface-muted), rgba(255,255,255,0.4));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .menu-section-title { color: var(--text-soft); }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 7px;
+    line-height: 1.5;
+  }
+  .menu-price { font-weight: 700; color: var(--wine); white-space: nowrap; margin-left: 10px; }
+
+  @media (max-width: 760px) {
+    .hero-spotlight, .role-card-grid, .menu-grid { grid-template-columns: 1fr; }
+    .hero-image-card, .hero-image-card img { min-height: 220px; }
+  }
+
+  @media (max-width: 560px) {
+    .drill-options { grid-template-columns: 1fr; }
+    .lesson-wrap { padding: 20px; border-radius: 24px; }
+    .page-header { padding: 28px 22px; border-radius: 24px; }
+    .progress-bar { padding: 12px; gap: 8px; }
+    .step-dot { width: 30px; height: 30px; }
+  }
+</style>
+
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Ordering in a Restaurant</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+
+  <div class="hero-spotlight">
+    <div class="hero-image-card">
+      <img src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Stock image of a waiter standing in a restaurant ready to serve guests">
+    </div>
+    <div class="hero-copy-card">
+      <span class="eyebrow">Lesson preview</span>
+      <h2>Practise real restaurant English with confidence</h2>
+      <p>This lesson helps learners handle a full restaurant visit in English, from arriving and ordering to asking questions about the menu and paying politely at the end of the meal.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>B1</strong>CEFR level</div>
+        <div class="hero-stat"><strong>40 min</strong>Interactive lesson</div>
+        <div class="hero-stat"><strong>6 stages</strong>Restaurant practice</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <!-- SECTION 0 -->
+    <div class="section active" id="sec0">
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Eating out in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="card-muted">
+        <p style="font-size:14px;font-weight:500;margin-bottom:10px">Discuss with your partner:</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. Do you enjoy eating in restaurants? What kind of food do you like?</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. Have you ever eaten in an English-speaking country? Was it different from ordering at home?</p>
+        <p style="font-size:14px;line-height:1.8">3. What do you find difficult about ordering food in English?</p>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Elicit restaurant vocabulary students already know. Ask: what do you say when you arrive? When you need more time? When something is wrong?</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px">Today's scenario — tonight's menu at <strong>The Olive Garden Bistro</strong>:</p>
+        <div class="menu-grid">
+          <div class="menu-section">
+            <div class="menu-section-title">Starters</div>
+            <div class="menu-item"><span>Soup of the day</span><span class="menu-price">£6.50</span></div>
+            <div class="menu-item"><span>Garlic bread</span><span class="menu-price">£4.00</span></div>
+            <div class="menu-item"><span>Prawn cocktail</span><span class="menu-price">£8.50</span></div>
+          </div>
+          <div class="menu-section">
+            <div class="menu-section-title">Main courses</div>
+            <div class="menu-item"><span>Grilled salmon</span><span class="menu-price">£18.00</span></div>
+            <div class="menu-item"><span>Chicken risotto</span><span class="menu-price">£15.50</span></div>
+            <div class="menu-item"><span>Vegetable curry (v)</span><span class="menu-price">£13.00</span></div>
+          </div>
+          <div class="menu-section">
+            <div class="menu-section-title">Desserts</div>
+            <div class="menu-item"><span>Chocolate cake</span><span class="menu-price">£6.00</span></div>
+            <div class="menu-item"><span>Ice cream</span><span class="menu-price">£4.50</span></div>
+          </div>
+          <div class="menu-section">
+            <div class="menu-section-title">Drinks</div>
+            <div class="menu-item"><span>Still / sparkling water</span><span class="menu-price">£2.50</span></div>
+            <div class="menu-item"><span>House wine (glass)</span><span class="menu-price">£5.50</span></div>
+            <div class="menu-item"><span>Soft drinks</span><span class="menu-price">£3.00</span></div>
+          </div>
+        </div>
+        <div style="margin-top:6px">
+          <span class="tag tag-blue">2 guests</span>
+          <span class="tag tag-green">Casual dining</span>
+          <span class="tag tag-amber">One guest is vegetarian</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key restaurant vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word, then click a blank to fill it. Hover over a word to see its meaning. Click a filled blank to remove it.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Useful phrases for restaurants</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Restaurant question forms drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">A meal at the bistro</div>
+      <div class="section-sub">12 minutes · Pair work</div>
+      <div class="tip-box"><strong>How to use:</strong> Student A = Waiter/Waitress. Student B = Customer. Use the script as a guide — improvise your own orders using the menu!</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">← back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again ↺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0, selectedWord=null, gapAnswers={}, drillScore=0, drillIndex=0, drillDone=false;
+
+const WORDS = [
+  { word: 'reservation', def: 'a booking made in advance for a table' },
+  { word: 'starter',     def: 'the first course of a meal' },
+  { word: 'allergic',    def: 'having a bad reaction to a certain food' },
+  { word: 'recommend',   def: 'to suggest something as a good choice' },
+  { word: 'well-done',   def: 'meat cooked all the way through' },
+  { word: 'bill',        def: 'the piece of paper showing how much you owe' },
+  { word: 'sparkling',   def: 'fizzy; containing bubbles (water)' },
+  { word: 'portion',     def: 'the amount of food served to one person' },
+];
+
+const GAPS = [
+  { id:'g0', before:'I made a ',          blank:'reservation',  after:' for two people under the name Johnson.' },
+  { id:'g1', before:'For my ',            blank:'starter',      after:", I'd like the prawn cocktail, please." },
+  { id:'g2', before:'I am ',              blank:'allergic',     after:' to nuts — is there anything in this dish?' },
+  { id:'g3', before:'Could you ',         blank:'recommend',    after:' something from the menu? I can\'t decide.' },
+  { id:'g4', before:'I\'d like my steak ',blank:'well-done',    after:', please — not pink in the middle.' },
+  { id:'g5', before:'Excuse me, could we have the ', blank:'bill', after:', please? We\'re in a bit of a hurry.' },
+  { id:'g6', before:'Could I have ',      blank:'sparkling',    after:' water, please? Not still.' },
+  { id:'g7', before:'The ',               blank:'portion',      after:' was very generous — I couldn\'t finish it!' },
+];
+
+const FUNC_CATS = [
+  { label: 'Arriving and being seated', phrases: ["Good evening. I have a reservation for two.", "We don't have a reservation — do you have a table for two?", "Could we sit by the window, please?", "Could we have a few minutes to look at the menu?"] },
+  { label: 'Ordering food and drinks', phrases: ["I'd like the soup of the day to start.", "For my main course, I'll have the grilled salmon.", "Could I have the risotto without the mushrooms, please?", "What do you recommend?"] },
+  { label: 'Asking about the menu', phrases: ["Does this dish contain nuts?", "Is this suitable for vegetarians?", "How is the chicken cooked?", "Could you tell me what comes with the salmon?"] },
+  { label: 'During the meal', phrases: ["Excuse me, we've been waiting quite a long time.", "I'm sorry, but I ordered the risotto, not the curry.", "Could we have some more bread, please?", "Everything is delicious, thank you."] },
+  { label: 'Paying and leaving', phrases: ["Could we have the bill, please?", "Could we pay separately?", "Is service included?", "Thank you very much — it was a lovely meal."] },
+];
+
+const DRILL_QS = [
+  { q: 'You want to ask if a dish contains dairy. Which question is most natural?', opts: ["Has this dish dairy?","Does this dish contain dairy?","Is there dairy containing this dish?","Does this dish contained dairy?"], ans:1, explain:'"Does this dish contain...?" is the standard present simple question for asking about ingredients.' },
+  { q: 'The waiter asks: "How would you _____ your steak?" Which word fits?', opts: ["want","like","have","order"], ans:1, explain:'"How would you like...?" is a polite way to ask for a preference — it uses "would like" not "want".' },
+  { q: 'You want to order politely. Which sentence is correct?', opts: ["I want the salmon.","Give me the salmon.","I'd like the salmon, please.","Can I get salmon?"], ans:2, explain:'"I\'d like + noun, please" is the standard polite way to order in a formal restaurant setting.' },
+  { q: 'You need the waiter\'s attention. Which phrase is most polite?', opts: ["Hey! Over here!","Excuse me, could we have...?","We need something now.","Waiter, come here."], ans:1, explain:'"Excuse me, could we...?" uses an indirect request form and is considered polite in British English.' },
+  { q: 'You want to ask what the waiter suggests. Which question uses an indirect form?', opts: ["What do you recommend?","Could you tell me what you recommend?","What you recommend?","Do you recommend what?"], ans:1, explain:'"Could you tell me...?" makes a direct question indirect and more formal/polite.' },
+  { q: 'Which sentence correctly asks to pay separately?', opts: ["We pay separate?","Could we be paying separately?","Could we pay separately, please?","Can we separate the pay?"], ans:2, explain:'"Could we + infinitive, please?" is a polite modal question for making requests.' },
+];
+
+const ROLEPLAY = [
+  { speaker:'Waiter', text:"Good evening! Welcome to The Olive Garden Bistro. Do you have a reservation?" },
+  { speaker:'Customer', text:"[Say yes and give your name. Ask if you can sit by the window.]" },
+  { speaker:'Waiter', text:"Of course! Right this way. Here are your menus. Can I get you anything to drink while you look?" },
+  { speaker:'Customer', text:"[Order drinks for both of you. One person wants sparkling water, the other wants a glass of house wine.]" },
+  { speaker:'Waiter', text:"Lovely. Are you ready to order, or would you like a few more minutes?" },
+  { speaker:'Customer', text:"[Ask for a few more minutes. Then, when ready, ask what the waiter recommends for the main course.]" },
+  { speaker:'Waiter', text:"I'd definitely recommend the grilled salmon — it's very popular tonight. The vegetable curry is also excellent." },
+  { speaker:'Customer', text:"[Order a starter and main course for yourself. Ask if the curry contains nuts, because one guest is allergic.]" },
+  { speaker:'Waiter', text:"The curry is nut-free, don't worry. And for your companion?" },
+  { speaker:'Customer', text:"[Order a starter and main for your companion. Ask if the risotto can be made without mushrooms.]" },
+  { speaker:'Waiter', text:"Absolutely, no problem at all. I'll put that order in for you now. Enjoy!" },
+  { speaker:'Customer', text:"[After the meal, get the waiter's attention politely. Ask for the bill and ask if you can pay separately.]" },
+  { speaker:'Waiter', text:"Of course! I'll bring it right away. Is service included? Yes, it is — 12.5%. Was everything to your liking?" },
+  { speaker:'Customer', text:"[Give a positive response. Thank the waiter and say you will come back soon.]" },
+];
+
+function goTo(n) {
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps(); if(n===2)buildFunctional(); if(n===3&&!drillDone)buildDrill(); if(n===4)buildRoleplay(); if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps() {
+  const bank=document.getElementById('wordBank'); bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word;c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences'); ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w) {
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w; const chip=document.getElementById('chip_'+w); if(chip)chip.classList.add('selected');
+}
+function fillGap(gid) {
+  const gap=document.getElementById(gid); if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const c=document.getElementById('chip_'+cur);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const chip=document.getElementById('chip_'+selectedWord);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps() {
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional() {
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--color-text-primary);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">Practise saying each phrase aloud. Pay attention to polite forms like "Could I...?" and "I'd like..." — these are more natural than "I want..."</div>`;
+}
+function buildDrill() { drillIndex=0;drillScore=0;renderDrillQ(); }
+function renderDrillQ() {
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--color-text-primary)">${drillScore===DRILL_QS.length?'Perfect score — well done!':drillScore>=4?'Great job! Review any missed questions.':'Good effort! Review the grammar notes and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options" id="optGrid">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question →</button></div>`;
+}
+function answerDrill(chosen) {
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay() {
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — Waiter / Waitress</div><p>Welcome guests, take their order, answer questions about the menu, and deal with any requests politely. If asked about allergens, the curry is nut-free. The risotto can be made without mushrooms.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — Customer</div><p>You are dining with a friend who is <strong>vegetarian</strong> and <strong>allergic to nuts</strong>. You want a 3-course meal. Use the menu on Stage 1. Ask questions before ordering.</p></div></div>`;
+  ROLEPLAY.forEach(line=>{if(line.speaker==='Waiter'){wrap.innerHTML+=`<div class="int-box"><div class="int-label">Waiter — Student A</div><div class="int-text">${line.text}</div></div>`;}else{wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Customer — Student B</div><div class="roleplay-text">${line.text}</div></div>`;}});
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap roles and order again!</p><p style="font-size:13px;color:var(--color-text-secondary)">This time, the customer is more demanding — they want to change a dish, send something back, and ask for a different table. Waiter: stay polite!</p></div></div>`;
+}
+function buildSummary() {
+  const items=['8 key vocabulary words for dining out','Functional phrases for 5 stages of a restaurant visit','6 question form exercises (polite requests, modal verbs, indirect questions)','A full mock restaurant role play with a real menu'];
+  const hw=["Write a short review (80–100 words) of a restaurant you have been to recently.","Write a dialogue: a customer phones a restaurant to make a reservation and ask about the menu.","Find a restaurant menu online in English and practise ordering from it aloud."];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Ordering in a Restaurant</p><p style="font-size:13px;color:var(--color-text-secondary)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--color-text-primary)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work today! The key to ordering confidently is knowing a few polite phrases — you don't need perfect grammar to communicate well in a restaurant.</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>

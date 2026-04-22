@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Making Complaints — B1 Lesson</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f4f6;
+    --bg-soft: #fdf8fa;
+    --surface: rgba(255,255,255,0.9);
+    --surface-strong: #ffffff;
+    --surface-muted: #fcf7f9;
+    --text: #221923;
+    --text-soft: #6f6270;
+    --text-faint: #968696;
+    --border: rgba(86, 43, 74, 0.12);
+    --border-strong: rgba(86, 43, 74, 0.2);
+    --shadow: 0 18px 48px rgba(92, 49, 80, 0.12);
+    --shadow-soft: 0 10px 30px rgba(92, 49, 80, 0.08);
+    --berry: #a33a67;
+    --berry-dark: #7f274f;
+    --berry-soft: #fdebf3;
+    --blue: #2e73c7;
+    --blue-soft: #eaf3ff;
+    --green: #4e8b45;
+    --green-soft: #eef8ea;
+    --amber: #a86508;
+    --amber-soft: #fff4df;
+    --red: #c34558;
+    --red-soft: #fdecef;
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 28px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161118;
+      --bg-soft: #1f1720;
+      --surface: rgba(29, 22, 31, 0.9);
+      --surface-strong: #221924;
+      --surface-muted: #2a1f2c;
+      --text: #f6edf4;
+      --text-soft: #c8b7c6;
+      --text-faint: #a18fa0;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --shadow: 0 18px 48px rgba(0,0,0,0.3);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.24);
+      --berry: #f08ab2;
+      --berry-dark: #ffc0d8;
+      --berry-soft: rgba(163,58,103,0.2);
+      --blue: #86bcff;
+      --blue-soft: rgba(46,115,199,0.18);
+      --green: #98cf88;
+      --green-soft: rgba(78,139,69,0.18);
+      --amber: #ffc76d;
+      --amber-soft: rgba(168,101,8,0.18);
+      --red: #ff97a4;
+      --red-soft: rgba(195,69,88,0.18);
+    }
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(163,58,103,0.14), transparent 30%),
+      radial-gradient(circle at top right, rgba(46,115,199,0.12), transparent 22%),
+      linear-gradient(180deg, var(--bg-soft), var(--bg));
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 18px 56px;
+  }
+
+  .outer { max-width: 920px; margin: 0 auto; }
+
+  .page-header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(78,28,54,0.98), rgba(163,58,103,0.9));
+    color: white;
+    text-align: left;
+    margin-bottom: 22px;
+    padding: 34px 30px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .page-header::before, .page-header::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+  .page-header::before {
+    width: 280px; height: 280px; right: -80px; top: -110px;
+    background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 68%);
+  }
+  .page-header::after {
+    width: 220px; height: 220px; left: -50px; bottom: -120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+  }
+  .page-header h1 {
+    position: relative; z-index: 1;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.08; font-weight: 700; margin-bottom: 10px;
+    letter-spacing: -0.03em; max-width: 580px;
+  }
+  .page-header p {
+    position: relative; z-index: 1; font-size: 15px;
+    color: rgba(255,255,255,0.82); margin-bottom: 18px;
+  }
+  .page-header p::before {
+    content: 'Interactive lesson'; display: inline-block; margin-right: 10px;
+    padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: #fff; vertical-align: middle;
+  }
+
+  .hero-spotlight {
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; align-items: stretch; margin: 0 0 26px;
+  }
+  .hero-image-card {
+    overflow: hidden; border-radius: 24px; background: var(--surface-strong); border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft); min-height: 280px;
+  }
+  .hero-image-card img {
+    width: 100%; height: 100%; min-height: 280px; object-fit: cover; display: block;
+  }
+  .hero-copy-card {
+    background: linear-gradient(180deg, var(--surface-strong), var(--surface-muted));
+    border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow-soft);
+    padding: 24px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .eyebrow {
+    display: inline-block; align-self: flex-start; margin-bottom: 10px; padding: 6px 12px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--berry); background: var(--berry-soft); border: 1px solid rgba(163,58,103,0.15);
+    border-radius: 999px;
+  }
+  .hero-copy-card h2 {
+    font-family: 'Fraunces', Georgia, serif; font-size: clamp(1.5rem, 2.6vw, 2.15rem);
+    line-height: 1.12; margin-bottom: 10px; letter-spacing: -0.03em; color: var(--text);
+  }
+  .hero-copy-card p { font-size: 14px; line-height: 1.75; color: var(--text-soft); }
+  .hero-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .hero-stat {
+    padding: 10px 12px; border-radius: 14px; background: var(--surface-strong);
+    border: 1px solid var(--border); font-size: 12px; color: var(--text-soft);
+  }
+  .hero-stat strong { display: block; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+
+  .lesson-wrap {
+    backdrop-filter: blur(14px); background: var(--surface); border-radius: 30px;
+    border: 1px solid var(--border); box-shadow: var(--shadow); padding: 28px;
+  }
+  .progress-bar {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 30px; padding: 16px;
+    background: var(--surface-muted); border: 1px solid var(--border); border-radius: 22px;
+  }
+  .step-dot {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+    color: var(--text-soft); background: var(--surface-strong); cursor: pointer; flex-shrink: 0;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .step-dot:hover { transform: translateY(-1px); }
+  .step-dot.active {
+    background: linear-gradient(135deg, var(--berry), var(--berry-dark)); color: #fff; border-color: transparent;
+    box-shadow: 0 10px 20px rgba(163,58,103,0.28);
+  }
+  .step-dot.done {
+    background: linear-gradient(135deg, #78b95c, var(--green)); color: #fff; border-color: transparent;
+  }
+  .step-line { flex: 1; height: 2px; background: linear-gradient(90deg, var(--border), transparent); border-radius: 999px; }
+
+  .section { display: none; }
+  .section.active { display: block; animation: fadeUp .28s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0);} }
+
+  .section-header {
+    font-size: 11px; font-weight: 800; color: var(--berry); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Fraunces', Georgia, serif; font-size: clamp(1.7rem, 3vw, 2.2rem);
+    font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.14; letter-spacing: -0.02em;
+  }
+  .section-sub { font-size: 14px; color: var(--text-soft); margin-bottom: 22px; }
+
+  .card, .card-muted {
+    border-radius: 22px; padding: 18px 20px; margin-bottom: 14px; border: 1px solid var(--border); box-shadow: var(--shadow-soft);
+  }
+  .card { background: var(--surface-strong); }
+  .card-muted { background: linear-gradient(180deg, var(--surface-muted), rgba(255,255,255,0.4)); }
+
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .vocab-chip {
+    background: linear-gradient(180deg, var(--blue-soft), rgba(255,255,255,0.85));
+    border: 1px solid rgba(46,115,199,0.18); border-radius: 14px; padding: 11px 12px; font-size: 13px;
+    font-weight: 700; color: var(--blue); text-align: center; cursor: pointer; user-select: none;
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease; box-shadow: 0 8px 18px rgba(46,115,199,0.08);
+  }
+  .vocab-chip:hover { transform: translateY(-1px); box-shadow: 0 12px 22px rgba(46,115,199,0.12); }
+  .vocab-chip.used { background: var(--surface-muted); color: var(--text-faint); border-color: var(--border); opacity: 0.58; box-shadow: none; }
+  .vocab-chip.selected { box-shadow: 0 0 0 3px rgba(46,115,199,0.18), 0 14px 24px rgba(46,115,199,0.12); transform: translateY(-1px); }
+
+  .gap-sentence { font-size: 15px; color: var(--text); line-height: 2.25; margin-bottom: 12px; }
+  .gap {
+    display: inline-block; min-width: 118px; min-height: 28px; border-bottom: 2px solid var(--berry);
+    margin: 0 5px; text-align: center; font-weight: 700; color: var(--berry-dark); font-size: 14px; cursor: pointer;
+    vertical-align: bottom; padding: 0 6px; transition: all .16s ease; border-radius: 8px 8px 0 0; background: rgba(163,58,103,0.05);
+  }
+  .gap.correct { border-bottom-color: var(--green); color: #255c1d; background: var(--green-soft); }
+  .gap.wrong { border-bottom-color: var(--red); color: #992e2e; background: var(--red-soft); animation: shake .3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+  .feedback-msg { font-size: 13px; padding: 12px 14px; border-radius: 14px; margin-bottom: 14px; display:none; border:1px solid transparent; }
+  .feedback-msg.show { display:block; }
+  .feedback-msg.ok { background: var(--green-soft); color:#2d621f; border-color: rgba(78,139,69,0.2); }
+  .feedback-msg.err { background: var(--red-soft); color:#9a2c3d; border-color: rgba(195,69,88,0.2); }
+
+  .drill-q { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.65; }
+  .drill-options { display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 12px; }
+  .opt-btn {
+    background: var(--surface-strong); border: 1px solid var(--border-strong); border-radius: 16px; padding: 12px 14px;
+    font-size: 14px; color: var(--text); cursor: pointer; transition: all .15s; text-align:left; line-height:1.5;
+  }
+  .opt-btn:hover:not(:disabled) { background: var(--surface-muted); transform: translateY(-1px); }
+  .opt-btn.correct { background: var(--green-soft); border-color: rgba(78,139,69,0.35); color:#2d621f; }
+  .opt-btn.wrong { background: var(--red-soft); border-color: rgba(195,69,88,0.35); color:#992e2e; }
+  .opt-btn:disabled { cursor: default; }
+
+  .progress-counter, .time-badge { font-size: 12px; color: var(--text-soft); }
+  .nav-row { display:flex; gap:8px; margin-top:1.7rem; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+  .nav-right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .btn {
+    background: var(--surface-strong); border:1px solid var(--border-strong); border-radius: 14px; padding: 10px 20px;
+    font-size:14px; font-weight:600; color: var(--text); cursor:pointer; transition: all .15s ease; box-shadow: var(--shadow-soft);
+  }
+  .btn:hover { background: var(--surface-muted); transform: translateY(-1px); }
+  .btn.primary { background: linear-gradient(135deg, var(--berry), var(--berry-dark)); color:#fff; border-color: transparent; }
+  .btn.primary:hover { filter: brightness(1.03); }
+  .time-badge {
+    background: var(--surface-muted); border: 1px solid var(--border); border-radius: 999px; padding: 7px 12px;
+  }
+
+  .roleplay-box, .int-box, .tip-box, .scenario-box, .role-card {
+    border-radius: 18px;
+  }
+  .roleplay-box {
+    border-left: 4px solid var(--blue); background: linear-gradient(180deg, var(--blue-soft), rgba(255,255,255,0.7));
+    padding: 14px 16px; margin-bottom: 12px;
+  }
+  .roleplay-label { font-size: 11px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+  .roleplay-text { font-size: 14px; color: #1c4f8d; line-height: 1.75; }
+
+  .int-box {
+    border-left: 4px solid var(--green); background: linear-gradient(180deg, var(--green-soft), rgba(255,255,255,0.7));
+    padding: 14px 16px; margin-bottom: 12px;
+  }
+  .int-label { font-size: 11px; font-weight: 800; color: #2f6b26; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+  .int-text { font-size: 14px; color: #2f5e28; line-height: 1.75; }
+
+  .tip-box {
+    background: linear-gradient(180deg, var(--amber-soft), rgba(255,255,255,0.55)); border:1px solid rgba(168,101,8,0.2);
+    padding: 12px 14px; font-size: 13px; color: #76470c; margin-bottom: 14px;
+  }
+  .score-circle {
+    width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--berry);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; margin:0 auto 18px;
+    background: radial-gradient(circle at center, rgba(163,58,103,0.08), transparent 72%);
+  }
+  .score-num { font-size: 24px; font-weight: 800; color: var(--berry); }
+  .score-lbl { font-size: 10px; color: var(--text-soft); }
+
+  .tag {
+    display:inline-block; font-size: 11px; font-weight:700; padding: 5px 10px; border-radius: 999px; margin-right:6px; margin-bottom:6px;
+  }
+  .tag-blue { background: var(--blue-soft); color: var(--blue); border: 1px solid rgba(46,115,199,0.18); }
+  .tag-green { background: var(--green-soft); color: #2f6b26; border: 1px solid rgba(78,139,69,0.18); }
+  .tag-amber { background: var(--amber-soft); color: #8a550a; border: 1px solid rgba(168,101,8,0.18); }
+  .tag-red { background: var(--red-soft); color: #a13a4a; border: 1px solid rgba(195,69,88,0.18); }
+
+  .divider { height:1px; background: var(--border); margin: 14px 0; }
+  .bullet-row { display:flex; align-items:flex-start; gap:8px; margin-bottom: 9px; }
+  .bullet-dot { margin-top: 6px; width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .explain-box { font-size: 13px; padding: 12px 14px; border-radius: 16px; margin-top: 8px; display:none; }
+
+  .role-card-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .role-card { padding: 1rem 1.25rem; border:1px solid; box-shadow: var(--shadow-soft); }
+  .role-card-a { background: linear-gradient(180deg, var(--blue-soft), rgba(255,255,255,0.7)); border-color: rgba(46,115,199,0.18); }
+  .role-card-b { background: linear-gradient(180deg, var(--green-soft), rgba(255,255,255,0.7)); border-color: rgba(78,139,69,0.18); }
+  .role-card-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .role-card-a .role-card-title { color: var(--blue); }
+  .role-card-b .role-card-title { color: #2f6b26; }
+  .role-card p { font-size: 13px; line-height: 1.7; }
+  .role-card-a p { color: #1c4f8d; }
+  .role-card-b p { color: #2f5e28; }
+
+  .scenario-box {
+    background: linear-gradient(180deg, var(--red-soft), rgba(255,255,255,0.6)); border: 1px solid rgba(195,69,88,0.18);
+    padding: 12px 14px; margin-bottom: 10px;
+  }
+  .scenario-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #a13a4a; margin-bottom: 4px; }
+  .scenario-text { font-size: 13px; color: #672431; line-height: 1.65; }
+
+  @media (max-width: 760px) {
+    .hero-spotlight, .role-card-grid { grid-template-columns: 1fr; }
+    .hero-image-card, .hero-image-card img { min-height: 220px; }
+  }
+  @media (max-width: 500px) { .drill-options { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Making Complaints</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+  
+  <div class="hero-spotlight">
+    <div class="hero-image-card">
+      <img src="https://images.pexels.com/photos/8111886/pexels-photo-8111886.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Stock image of a shop assistant and a customer speaking at a shop counter">
+    </div>
+    <div class="hero-copy-card">
+      <span class="eyebrow">Lesson preview</span>
+      <h2>Practise calm, polite complaints in realistic situations</h2>
+      <p>This version adds a polished layout and a relevant stock image to set the tone for service problems, refunds, and solution-focused communication.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>B1</strong>CEFR level</div>
+        <div class="hero-stat"><strong>40 min</strong>Interactive lesson</div>
+        <div class="hero-stat"><strong>6 stages</strong>Complaint practice</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <!-- SECTION 0 -->
+    <div class="section active" id="sec0">
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Complaining politely in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="card-muted">
+        <p style="font-size:14px;font-weight:500;margin-bottom:10px">Discuss with your partner:</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. Is it easy or difficult to complain in English? Why?</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. Have you ever complained about a product or service? What happened?</p>
+        <p style="font-size:14px;line-height:1.8">3. What is the difference between complaining <em>aggressively</em> and complaining <em>assertively</em>?</p>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Highlight the cultural point — British English complaints tend to be indirect and polite. Elicit phrases students already know. Ask: which is better — saying "This is broken!" or "I'm afraid there seems to be a problem with this"?</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today you will practise <strong>three complaint situations</strong>:</p>
+        <div class="scenario-box">
+          <div class="scenario-label">Scenario A</div>
+          <div class="scenario-text">A customer calls a mobile phone company. Their bill is incorrect — they have been charged for calls they did not make.</div>
+        </div>
+        <div class="scenario-box">
+          <div class="scenario-label">Scenario B (role play)</div>
+          <div class="scenario-text">A customer visits a clothes shop. They bought a jacket online but it arrived damaged. They want a replacement or refund.</div>
+        </div>
+        <div style="margin-top:8px">
+          <span class="tag tag-blue">Phone complaint</span>
+          <span class="tag tag-red">In-person complaint</span>
+          <span class="tag tag-amber">Formal register</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key complaints vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word, then click a blank to fill it. Hover over a word to see its definition.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Useful phrases for complaints</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Complaints question forms drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">The damaged jacket</div>
+      <div class="section-sub">12 minutes · Pair work</div>
+      <div class="tip-box"><strong>How to use:</strong> Student A = Customer. Student B = Shop Assistant. The customer must stay polite but firm. The assistant tries to resolve the problem professionally.</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">← back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again ↺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0, selectedWord=null, gapAnswers={}, drillScore=0, drillIndex=0, drillDone=false;
+
+const WORDS = [
+  { word: 'faulty',      def: 'not working correctly; having a defect' },
+  { word: 'refund',      def: 'money returned to a customer for a bad product' },
+  { word: 'receipt',     def: 'a document proving that a purchase was made' },
+  { word: 'overcharged', def: 'asked to pay more than the correct amount' },
+  { word: 'replacement', def: 'a new item given instead of a broken one' },
+  { word: 'dissatisfied',def: 'not happy with a product or service' },
+  { word: 'inconvenience',def: 'trouble or difficulty caused to someone' },
+  { word: 'complaint',   def: 'a statement that something is unsatisfactory' },
+];
+
+const GAPS = [
+  { id:'g0', before:'I returned the phone because it was completely ', blank:'faulty', after:' — the screen went black after one day.' },
+  { id:'g1', before:'I would like a full ', blank:'refund', after:' as the item was not as described on the website.' },
+  { id:'g2', before:"I have my ", blank:'receipt', after:" here — it shows I paid £89.99 on the 12th of March." },
+  { id:'g3', before:'I believe I have been ', blank:'overcharged', after:' — my bill shows £45 but the price online is £30.' },
+  { id:'g4', before:'As the jacket is damaged, I would like a ', blank:'replacement', after:' or my money back.' },
+  { id:'g5', before:'I am very ', blank:'dissatisfied', after:' with the level of service I have received.' },
+  { id:'g6', before:'I apologise for any ', blank:'inconvenience', after:' this has caused you.' },
+  { id:'g7', before:'I would like to make a formal ', blank:'complaint', after:' about the delay with my delivery.' },
+];
+
+const FUNC_CATS = [
+  { label: 'Starting a complaint politely', phrases: ["I'm afraid there seems to be a problem with...", "I'd like to report an issue with my order.", "I'm sorry to bother you, but I need to raise a concern.", "I'm calling because I'm not happy with..."] },
+  { label: 'Explaining the problem', phrases: ["The item I received is damaged / faulty.", "I was charged the wrong amount.", "My order arrived late — it was supposed to come on Monday.", "This is not what I ordered."] },
+  { label: 'Expressing dissatisfaction firmly', phrases: ["I have to say I'm quite disappointed.", "This really isn't good enough.", "I've been waiting for over three weeks.", "This is the second time this has happened."] },
+  { label: 'Making a request', phrases: ["I'd like a full refund, please.", "Could you send me a replacement as soon as possible?", "I'd appreciate it if you could look into this.", "What can you do to resolve this situation?"] },
+  { label: 'Responding to a complaint (staff)', phrases: ["I'm very sorry to hear that.", "I completely understand your frustration.", "I'll look into this right away.", "We'll arrange a replacement / refund for you."] },
+];
+
+const DRILL_QS = [
+  { q: 'You want to complain politely. Which sentence is the most appropriate?', opts: ["This is broken and I want my money back NOW.","I'm afraid there seems to be a problem with this item.","Your product is terrible.","Give me a refund."], ans:1, explain:'"I\'m afraid there seems to be a problem with..." is an indirect, polite way to raise an issue without being aggressive.' },
+  { q: 'You want to explain what you expect as a solution. Which is the most polite form?', opts: ["You must give me a refund.","I want replacement.","I'd like a full refund or a replacement, please.","Refund me now."], ans:2, explain:'"I\'d like + noun phrase, please" is the standard polite form for making a formal request.' },
+  { q: 'Which sentence correctly uses the present perfect to explain your experience?', opts: ["I wait three weeks already.","I have been waiting for three weeks.","I am waiting three weeks.","I waited for three weeks already."], ans:1, explain:'Use present perfect continuous ("have been waiting") for an ongoing situation that started in the past and continues now.' },
+  { q: 'A staff member wants to apologise. Which is the most professional response?', opts: ["Yeah, sorry about that.","I completely understand your frustration and I apologise for the inconvenience.","It\'s not our fault.","Well, these things happen."], ans:1, explain:'A professional apology acknowledges the customer\'s feelings and includes a formal apology phrase.' },
+  { q: 'You want to ask the staff member to take action. Which indirect question is correct?', opts: ["What you will do about this?","Could you tell me what you can do to resolve this?","What do you do?","Can you to fix this?"], ans:1, explain:'"Could you tell me...?" turns a direct question into an indirect, more polite form using statement word order.' },
+  { q: 'Which sentence uses a conditional correctly to explain the situation?', opts: ["If I knew it was damaged, I don\'t buy it.","If I had known it was damaged, I wouldn\'t have bought it.","If I knew it was damaged, I wouldn\'t buy it.","If I had known it was damaged, I didn\'t buy it."], ans:1, explain:'Type 3 conditionals (if + past perfect, would have + past participle) refer to hypothetical past situations.' },
+];
+
+const ROLEPLAY = [
+  { speaker:'Staff',    text:"Good afternoon! Welcome to StyleZone. How can I help you today?" },
+  { speaker:'Customer', text:"[Greet the assistant. Say you bought a jacket online and that you have a problem with it.]" },
+  { speaker:'Staff',    text:"Oh, I'm sorry to hear that. What seems to be the issue?" },
+  { speaker:'Customer', text:"[Explain the problem clearly: the jacket arrived with a torn seam and a missing button. You ordered it two weeks ago.]" },
+  { speaker:'Staff',    text:"I completely understand. Do you have your receipt or order confirmation with you?" },
+  { speaker:'Customer', text:"[Say yes and provide the order number. Express that you are quite disappointed because it was a gift.]" },
+  { speaker:'Staff',    text:"Of course, I'm very sorry about this. What would you like us to do — would you prefer a replacement or a full refund?" },
+  { speaker:'Customer', text:"[Say you'd prefer a replacement but ask how long it would take. If it takes more than a week, you would rather have a refund.]" },
+  { speaker:'Staff',    text:"Let me check our stock... I'm afraid this jacket is out of stock in your size right now. It would take about 10 days to arrive." },
+  { speaker:'Customer', text:"[Politely but firmly say that 10 days is too long. State clearly that you would like a full refund. Ask when it will be processed.]" },
+  { speaker:'Staff',    text:"Absolutely, I completely understand. I'll process a full refund right now. You should see the money in your account within 3–5 business days." },
+  { speaker:'Customer', text:"[Thank the assistant. Say that you hope the issue doesn't happen again. Ask if you will receive a confirmation email.]" },
+  { speaker:'Staff',    text:"Yes, you'll receive a confirmation by email within the hour. Again, I'm very sorry for the inconvenience. Is there anything else I can help you with?" },
+  { speaker:'Customer', text:"[Say no thank you and close the conversation politely.]" },
+];
+
+function goTo(n) {
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps(); if(n===2)buildFunctional(); if(n===3&&!drillDone)buildDrill(); if(n===4)buildRoleplay(); if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps() {
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word;c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w) {
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w;const chip=document.getElementById('chip_'+w);if(chip)chip.classList.add('selected');
+}
+function fillGap(gid) {
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const c=document.getElementById('chip_'+cur);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const chip=document.getElementById('chip_'+selectedWord);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps() {
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional() {
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--color-text-primary);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">Remember: a good complaint is <strong>clear, calm, and firm</strong>. Practise using indirect forms and polite modals — they make you sound more professional and are more likely to get results.</div>`;
+}
+function buildDrill(){drillIndex=0;drillScore=0;renderDrillQ();}
+function renderDrillQ() {
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--color-text-primary)">${drillScore===DRILL_QS.length?'Perfect score — well done!':drillScore>=4?'Great job! Review any missed questions.':'Good effort! Review the grammar notes and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options" id="optGrid">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question →</button></div>`;
+}
+function answerDrill(chosen) {
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay() {
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — Customer</div><p>You bought a jacket online for £85. It arrived with a <strong>torn seam</strong> and a <strong>missing button</strong>. You have your order confirmation. You want a replacement, but if it takes more than a week, you want a full refund.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — Shop Assistant</div><p>Be professional and sympathetic. The jacket is <strong>out of stock</strong> — a replacement would take 10 days. You can process a full refund immediately. Stay polite even if the customer becomes frustrated.</p></div></div>`;
+  ROLEPLAY.forEach(line=>{if(line.speaker==='Staff'){wrap.innerHTML+=`<div class="int-box"><div class="int-label">Shop Assistant — Student B</div><div class="int-text">${line.text}</div></div>`;}else{wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Customer — Student A</div><div class="roleplay-text">${line.text}</div></div>`;}});
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Extension: the phone complaint</p><p style="font-size:13px;color:var(--color-text-secondary)">Swap roles. Now Student B phones a mobile phone company (Student A is the call centre agent). The customer has been overcharged £30 on their last bill. Use the functional phrases from Stage 3 to make and resolve the complaint.</p></div></div>`;
+}
+function buildSummary() {
+  const items=['8 key vocabulary words for complaining','Functional phrases for 5 complaint situations (including staff responses)','6 question form exercises (present perfect continuous, type 3 conditionals, indirect questions)','A full mock in-store complaint role play + phone complaint extension'];
+  const hw=["Write a formal complaint email (100–120 words) about a late delivery from an online shop.","Rewrite these aggressive complaints in a polite way: 1) \"This is rubbish!\" 2) \"You must fix this now!\"","Find an example of a complaint letter in English online and identify the functional phrases used."];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Making Complaints</p><p style="font-size:13px;color:var(--color-text-secondary)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--color-text-primary)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work today! The most effective complaints are polite, specific, and solution-focused. Knowing the right phrases gives you confidence to speak up when something goes wrong.</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>

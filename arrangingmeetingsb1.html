@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arranging &amp; Rearranging Meetings — B1 Lesson</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap');
+
+  :root {
+    --bg: #f4f7fb;
+    --bg-soft: #eef3f9;
+    --surface: rgba(255,255,255,0.9);
+    --surface-strong: #ffffff;
+    --surface-muted: #f7f9fc;
+    --text: #162030;
+    --text-soft: #5f6c7b;
+    --text-faint: #8593a3;
+    --border: rgba(21, 48, 84, 0.12);
+    --border-strong: rgba(21, 48, 84, 0.2);
+    --shadow: 0 18px 48px rgba(28, 53, 88, 0.12);
+    --shadow-soft: 0 10px 30px rgba(28, 53, 88, 0.08);
+    --blue: #1f6fd1;
+    --blue-dark: #184f92;
+    --blue-soft: #eaf3ff;
+    --green: #3e8b33;
+    --green-soft: #eef8e9;
+    --amber: #a86508;
+    --amber-soft: #fff3de;
+    --red: #c84242;
+    --red-soft: #fdeeee;
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 26px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1724;
+      --bg-soft: #141f31;
+      --surface: rgba(20, 31, 49, 0.88);
+      --surface-strong: #162133;
+      --surface-muted: #1a2740;
+      --text: #eef4ff;
+      --text-soft: #b4c0cf;
+      --text-faint: #8b9aad;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --shadow: 0 18px 48px rgba(0,0,0,0.28);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.22);
+      --blue: #6bb0ff;
+      --blue-dark: #8cc2ff;
+      --blue-soft: rgba(58, 116, 196, 0.18);
+      --green: #8ecf72;
+      --green-soft: rgba(95, 142, 71, 0.18);
+      --amber: #ffbe64;
+      --amber-soft: rgba(168, 101, 8, 0.18);
+      --red: #ff8d8d;
+      --red-soft: rgba(200, 66, 66, 0.18);
+    }
+  }
+}
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: radial-gradient(circle at top left, rgba(31,111,209,0.15), transparent 28%), radial-gradient(circle at top right, rgba(168,101,8,0.12), transparent 24%), linear-gradient(180deg, var(--bg-soft), var(--bg)); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
+  .outer { max-width: 920px; margin: 0 auto; }
+  .page-header { text-align: center; margin-bottom: 2rem; }
+  .page-header h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .page-header p { font-size: 14px; color: var(--text-soft); }
+  .lesson-wrap { background: var(--surface-strong); border-radius: 22px; border: 0.5px solid var(--border); padding: 2rem; }
+  .progress-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--text-soft); background: var(--surface-muted); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .step-dot.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .step-dot.done { background: #EAF3DE; color: #3B6D11; border-color: #639922; }
+  .step-line { flex: 1; height: 0.5px; background: var(--border); }
+  .section { display: none; } .section.active { display: block; }
+  .section-header { font-size: 11px; font-weight: 500; color: #185FA5; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--text-soft); margin-bottom: 1.5rem; }
+  .card { background: var(--surface-strong); border: 0.5px solid var(--border); border-radius: 22px; padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .card-muted { background: var(--surface-muted); border: 0.5px solid var(--border); border-radius: 22px; padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .vocab-chip { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: 14px; padding: 7px 10px; font-size: 13px; font-weight: 500; color: #0C447C; text-align: center; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .vocab-chip:hover { background: #B5D4F4; }
+  .vocab-chip.used { background: var(--surface-muted); color: var(--text-soft); border-color: var(--border); opacity: 0.5; }
+  .vocab-chip.selected { outline: 2px solid #185FA5; }
+  .gap-sentence { font-size: 15px; color: var(--text); line-height: 2.2; margin-bottom: 10px; }
+  .gap { display: inline-block; min-width: 110px; height: 26px; border-bottom: 2px solid #378ADD; margin: 0 4px; text-align: center; font-weight: 500; color: #185FA5; font-size: 14px; cursor: pointer; vertical-align: bottom; padding: 0 4px; transition: all 0.15s; }
+  .gap.correct { border-bottom-color: #639922; color: #3B6D11; background: #EAF3DE; border-radius: 4px 4px 0 0; }
+  .gap.wrong { border-bottom-color: #E24B4A; color: #A32D2D; background: #FCEBEB; border-radius: 4px 4px 0 0; animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .feedback-msg { font-size: 13px; padding: 10px 14px; border-radius: 14px; margin-bottom: 12px; display: none; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+  .feedback-msg.err { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F7C1C1; }
+  .drill-q { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 14px; line-height: 1.6; }
+  .drill-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 500px) { .drill-options { grid-template-columns: 1fr; } }
+  .opt-btn { background: var(--surface-strong); border: 0.5px solid var(--border-strong); border-radius: 14px; padding: 10px 14px; font-size: 14px; color: var(--text); cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { background: var(--surface-muted); }
+  .opt-btn.correct { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+  .opt-btn:disabled { cursor: default; }
+  .progress-counter { font-size: 12px; color: var(--text-soft); margin-bottom: 8px; }
+  .nav-row { display: flex; gap: 8px; margin-top: 1.5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn { background: var(--surface-strong); border: 0.5px solid var(--border-strong); border-radius: 14px; padding: 9px 20px; font-size: 14px; color: var(--text); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--surface-muted); }
+  .btn.primary { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .btn.primary:hover { background: #0C447C; }
+  .time-badge { font-size: 11px; color: var(--text-soft); background: var(--surface-muted); border: 0.5px solid var(--border); border-radius: 14px; padding: 5px 10px; }
+  .roleplay-box { border-left: 3px solid #378ADD; background: #E6F1FB; border-radius: 0 14px 14px 0; padding: 12px 16px; margin-bottom: 10px; }
+  .roleplay-label { font-size: 11px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .roleplay-text { font-size: 14px; color: #0C447C; line-height: 1.7; }
+  .int-box { border-left: 3px solid #639922; background: #EAF3DE; border-radius: 0 14px 14px 0; padding: 12px 16px; margin-bottom: 10px; }
+  .int-label { font-size: 11px; font-weight: 500; color: #3B6D11; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .int-text { font-size: 14px; color: #27500A; line-height: 1.7; }
+  .tip-box { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 14px; padding: 10px 14px; font-size: 13px; color: #633806; margin-bottom: 14px; }
+  .score-circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #185FA5; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto 18px; }
+  .score-num { font-size: 24px; font-weight: 500; color: #185FA5; }
+  .score-lbl { font-size: 10px; color: var(--text-soft); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 14px; margin-right: 4px; margin-bottom: 4px; }
+  .tag-blue { background: #E6F1FB; color: #0C447C; border: 0.5px solid #B5D4F4; }
+  .tag-green { background: #EAF3DE; color: #27500A; border: 0.5px solid #C0DD97; }
+  .tag-amber { background: #FAEEDA; color: #633806; border: 0.5px solid #FAC775; }
+  .divider { height: 0.5px; background: var(--border); margin: 14px 0; }
+  .bullet-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .bullet-dot { margin-top: 6px; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .explain-box { font-size: 13px; padding: 10px 14px; border-radius: 14px; margin-top: 8px; display: none; }
+  .role-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .role-card-grid { grid-template-columns: 1fr; } }
+  .role-card { border-radius: 22px; padding: 1rem 1.25rem; border: 0.5px solid; }
+  .role-card-a { background: #E6F1FB; border-color: #B5D4F4; }
+  .role-card-b { background: #EAF3DE; border-color: #C0DD97; }
+  .role-card-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .role-card-a .role-card-title { color: #185FA5; }
+  .role-card-b .role-card-title { color: #3B6D11; }
+  .role-card p { font-size: 13px; line-height: 1.7; }
+  .role-card-a p { color: #0C447C; }
+  .role-card-b p { color: #27500A; }
+  .diary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .diary-grid { grid-template-columns: 1fr; } }
+  .diary-card { background: var(--surface-muted); border: 0.5px solid var(--border); border-radius: 14px; padding: 10px 14px; }
+  .diary-name { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; color: var(--text-soft); }
+  .diary-slot { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; border-bottom: 0.5px solid var(--border); }
+  .diary-slot:last-child { border-bottom: none; }
+  .diary-time { color: var(--text-soft); }
+  .diary-free { color: #3B6D11; font-weight: 500; }
+  .diary-busy { color: #A32D2D; font-weight: 500; }
+
+  html { scroll-behavior: smooth; }
+  .page-header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(20,34,56,0.96), rgba(31,111,209,0.88)), linear-gradient(135deg, #17345a, #1f6fd1);
+    color: white;
+    text-align: left;
+    margin-bottom: 22px;
+    padding: 34px 30px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .page-header::before,.page-header::after { content:""; position:absolute; border-radius:50%; pointer-events:none; opacity:.35; }
+  .page-header::before { width:280px; height:280px; right:-80px; top:-110px; background:radial-gradient(circle, rgba(255,255,255,.35), transparent 68%); }
+  .page-header::after { width:220px; height:220px; left:-50px; bottom:-120px; background:radial-gradient(circle, rgba(255,255,255,.18), transparent 70%); }
+  .page-header h1 { position:relative; z-index:1; font-family:'Fraunces', Georgia, serif; font-size:clamp(2rem,4vw,3rem); line-height:1.08; font-weight:700; margin-bottom:10px; letter-spacing:-0.03em; max-width:680px; }
+  .page-header p { position:relative; z-index:1; font-size:15px; color:rgba(255,255,255,.82); margin-bottom:18px; }
+  .page-header p::before { content:'Interactive lesson'; display:inline-block; margin-right:10px; padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#fff; vertical-align:middle; }
+  .hero-spotlight { display:grid; grid-template-columns:1.1fr .9fr; gap:22px; align-items:stretch; margin:0 0 26px; }
+  .hero-image-card { overflow:hidden; border-radius:24px; background:var(--surface-strong); border:1px solid var(--border); box-shadow:var(--shadow-soft); min-height:280px; }
+  .hero-image-card img { width:100%; height:100%; min-height:280px; object-fit:cover; display:block; }
+  .hero-copy-card { background:linear-gradient(180deg, var(--surface-strong), var(--surface-muted)); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow-soft); padding:24px; display:flex; flex-direction:column; justify-content:center; }
+  .eyebrow { display:inline-block; align-self:flex-start; margin-bottom:10px; padding:6px 12px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--blue); background:var(--blue-soft); border:1px solid rgba(31,111,209,.15); border-radius:999px; }
+  .hero-copy-card h2 { font-family:'Fraunces', Georgia, serif; font-size:clamp(1.5rem,2.6vw,2.15rem); line-height:1.12; margin-bottom:10px; letter-spacing:-0.03em; color:var(--text); }
+  .hero-copy-card p { font-size:14px; line-height:1.75; color:var(--text-soft); }
+  .hero-stats { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+  .hero-stat { padding:10px 12px; border-radius:14px; background:var(--surface-strong); border:1px solid var(--border); font-size:12px; color:var(--text-soft); }
+  .hero-stat strong { display:block; font-size:14px; color:var(--text); margin-bottom:2px; }
+  .lesson-wrap { backdrop-filter: blur(14px); background: var(--surface); border-radius: 30px; border: 1px solid var(--border); box-shadow: var(--shadow); padding: 28px; }
+  .progress-bar { display:flex; align-items:center; gap:10px; margin-bottom:30px; padding:16px; background:var(--surface-muted); border:1px solid var(--border); border-radius:22px; }
+  .step-dot { width:34px; height:34px; border-radius:50%; border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--text-soft); background:var(--surface-strong); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+  .step-dot.active { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color:#fff; border-color:transparent; box-shadow:0 10px 20px rgba(31,111,209,.28); }
+  .step-dot.done { background: linear-gradient(135deg, #78b95c, var(--green)); color:#fff; border-color:transparent; }
+  .step-line { flex:1; height:2px; background: linear-gradient(90deg, var(--border), transparent); border-radius:999px; }
+  .section.active { animation: fadeUp .28s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0);} }
+  .section-title { font-family:'Fraunces', Georgia, serif; font-size:clamp(1.7rem,3vw,2.2rem); font-weight:600; color:var(--text); margin-bottom:8px; line-height:1.14; letter-spacing:-0.02em; }
+  .section-sub { font-size:14px; color:var(--text-soft); margin-bottom:22px; }
+  .card, .card-muted { border-radius:22px; padding:18px 20px; margin-bottom:14px; border:1px solid var(--border); box-shadow:var(--shadow-soft); }
+  .card { background:var(--surface-strong); }
+  .card-muted { background:linear-gradient(180deg, var(--surface-muted), rgba(255,255,255,.3)); }
+  .vocab-chip { background: linear-gradient(180deg, var(--blue-soft), rgba(255,255,255,.8)); border:1px solid rgba(31,111,209,.18); border-radius:14px; padding:11px 12px; font-size:13px; font-weight:700; color:var(--blue-dark); box-shadow:0 8px 18px rgba(31,111,209,.08); }
+  .vocab-chip:hover { transform:translateY(-1px); box-shadow:0 12px 22px rgba(31,111,209,.12); }
+  .vocab-chip.used { background: var(--surface-muted); color:var(--text-faint); border-color:var(--border); opacity:.58; box-shadow:none; }
+  .vocab-chip.selected { outline:none; box-shadow:0 0 0 3px rgba(31,111,209,.18), 0 14px 24px rgba(31,111,209,.12); transform:translateY(-1px); }
+  .gap { min-width:118px; min-height:28px; border-bottom:2px solid var(--blue); margin:0 5px; font-weight:700; color:var(--blue-dark); padding:0 6px; border-radius:8px 8px 0 0; background:rgba(31,111,209,.04); }
+  .gap.correct { border-bottom-color:var(--green); color:#255c1d; background:var(--green-soft); }
+  .gap.wrong { border-bottom-color:var(--red); color:#992e2e; background:var(--red-soft); }
+  .opt-btn, .btn { border-radius:14px; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+  .opt-btn:hover:not(:disabled), .btn:hover { transform:translateY(-1px); box-shadow:var(--shadow-soft); }
+  .btn.primary { background:linear-gradient(135deg, var(--blue), var(--blue-dark)); border-color:transparent; }
+  .btn.primary:hover { filter:brightness(.96); }
+  .time-badge, .tag { border-radius:999px; }
+  .roleplay-box, .int-box, .tip-box, .diary-card, .role-card { box-shadow: var(--shadow-soft); }
+  .diary-card { background:linear-gradient(180deg, var(--surface-muted), rgba(255,255,255,.5)); border:1px solid var(--border); border-radius:18px; padding:14px 16px; }
+  .diary-slot { padding:7px 0; }
+  .feedback-msg.ok, .opt-btn.correct, .int-box { background: var(--green-soft); }
+  .feedback-msg.err, .opt-btn.wrong { background: var(--red-soft); }
+  @media (max-width: 760px) {
+    .hero-spotlight, .role-card-grid, .diary-grid { grid-template-columns:1fr; }
+    .hero-image-card, .hero-image-card img { min-height:220px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Arranging &amp; Rearranging Meetings</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+
+  <div class="hero-spotlight">
+    <div class="hero-image-card">
+      <img src="https://images.pexels.com/photos/3771089/pexels-photo-3771089.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Stock image of one person sitting at a desk and speaking on the phone">
+    </div>
+    <div class="hero-copy-card">
+      <span class="eyebrow">Lesson preview</span>
+      <h2>Arrange, confirm, and rearrange meetings with confidence</h2>
+      <p>This lesson helps learners practise professional scheduling language, polite question forms, and realistic meeting changes. The image gives the page a more modern business feel.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>B1</strong>CEFR level</div>
+        <div class="hero-stat"><strong>40 min</strong>Interactive lesson</div>
+        <div class="hero-stat"><strong>6 stages</strong>Meeting practice</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <!-- SECTION 0 -->
+    <div class="section active" id="sec0">
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Meetings in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="card-muted">
+        <p style="font-size:14px;font-weight:500;margin-bottom:10px">Discuss with your partner:</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. How do you usually arrange meetings — by phone, email, or in person?</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. Have you ever had to cancel or change a meeting at the last minute? What did you say?</p>
+        <p style="font-size:14px;line-height:1.8">3. What is important when rearranging a meeting? (Think about: politeness, reason, new time)</p>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Elicit phrases students already know. Ask: what's the difference between "cancel" and "postpone"? Between "free" and "available"? Write key vocabulary on the board before starting.</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--text-soft);margin-bottom:10px">Today's scenario — use these diaries to arrange and rearrange a meeting:</p>
+        <div class="diary-grid">
+          <div class="diary-card">
+            <div class="diary-name">Student A — Sarah Chen (Project Manager)</div>
+            <div class="diary-slot"><span class="diary-time">Mon 9:00</span><span class="diary-busy">Busy</span></div>
+            <div class="diary-slot"><span class="diary-time">Mon 14:00</span><span class="diary-free">Free</span></div>
+            <div class="diary-slot"><span class="diary-time">Tue 10:00</span><span class="diary-free">Free</span></div>
+            <div class="diary-slot"><span class="diary-time">Tue 15:00</span><span class="diary-busy">Busy</span></div>
+            <div class="diary-slot"><span class="diary-time">Wed 11:00</span><span class="diary-free">Free</span></div>
+            <div class="diary-slot"><span class="diary-time">Wed 14:00</span><span class="diary-busy">Busy</span></div>
+          </div>
+          <div class="diary-card">
+            <div class="diary-name">Student B — Marco Ricci (Sales Director)</div>
+            <div class="diary-slot"><span class="diary-time">Mon 9:00</span><span class="diary-free">Free</span></div>
+            <div class="diary-slot"><span class="diary-time">Mon 14:00</span><span class="diary-busy">Busy</span></div>
+            <div class="diary-slot"><span class="diary-time">Tue 10:00</span><span class="diary-busy">Busy</span></div>
+            <div class="diary-slot"><span class="diary-time">Tue 15:00</span><span class="diary-free">Free</span></div>
+            <div class="diary-slot"><span class="diary-time">Wed 11:00</span><span class="diary-free">Free</span></div>
+            <div class="diary-slot"><span class="diary-time">Wed 14:00</span><span class="diary-free">Free</span></div>
+          </div>
+        </div>
+        <div>
+          <span class="tag tag-blue">Phone call</span>
+          <span class="tag tag-green">Business English</span>
+          <span class="tag tag-amber">Rescheduling included</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key meetings vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word, then click a blank to fill it. Hover over a word to see its definition.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--text-soft);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Useful phrases for meetings</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Meetings question forms drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">Arranging the meeting — then rearranging it</div>
+      <div class="section-sub">12 minutes · Pair work · Two rounds</div>
+      <div class="tip-box"><strong>How to use:</strong> This role play has <strong>two parts</strong>. Part 1: arrange the meeting. Part 2 (a few days later): Student A needs to rearrange it. Use the diaries from Stage 1 to find a time that works for both.</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">← back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again ↺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0, selectedWord=null, gapAnswers={}, drillScore=0, drillIndex=0, drillDone=false;
+
+const WORDS = [
+  { word: 'available',  def: 'free; not busy at a particular time' },
+  { word: 'postpone',   def: 'to arrange for something to happen later than planned' },
+  { word: 'agenda',     def: 'a list of topics to be discussed at a meeting' },
+  { word: 'convenient', def: 'suitable or easy for a particular purpose or person' },
+  { word: 'reschedule', def: 'to change the time of a planned meeting or event' },
+  { word: 'venue',      def: 'the place where a meeting or event is held' },
+  { word: 'confirm',    def: 'to state or show that something is definite' },
+  { word: 'urgent',     def: 'requiring immediate action or attention' },
+];
+
+const GAPS = [
+  { id:'g0', before:'Are you ',          blank:'available',   after:' on Wednesday afternoon, or are you busy?' },
+  { id:'g1', before:"I'm afraid we'll need to ", blank:'postpone', after:' the meeting — something urgent has come up.' },
+  { id:'g2', before:'Could you send me the ', blank:'agenda', after:' before the meeting so I can prepare?' },
+  { id:'g3', before:'Would Tuesday at 10 o\'clock be ', blank:'convenient', after:' for you?' },
+  { id:'g4', before:'I need to ',         blank:'reschedule', after:' our meeting — I have a conflict on Thursday.' },
+  { id:'g5', before:'We haven\'t decided on a ', blank:'venue', after:' yet — shall we meet at your office or ours?' },
+  { id:'g6', before:'Could you ',         blank:'confirm',    after:' the meeting details by email, please?' },
+  { id:'g7', before:'This is quite ',     blank:'urgent',     after:' — we need to meet before the end of the week.' },
+];
+
+const FUNC_CATS = [
+  { label: 'Arranging a meeting', phrases: ["I'd like to arrange a meeting to discuss...", "Would you be available sometime next week?", "When would be a good time for you?", "Could we meet on Tuesday at 10?"] },
+  { label: 'Checking availability', phrases: ["Are you free on Wednesday afternoon?", "Would Thursday morning suit you?", "Does 2 o'clock work for you?", "I'm free any time after 3 on Friday."] },
+  { label: 'Agreeing on a time', phrases: ["That works perfectly for me.", "Tuesday at 10 sounds good.", "I'll put that in my diary.", "Shall I send you a calendar invite?"] },
+  { label: 'Rearranging a meeting', phrases: ["I'm afraid I need to rearrange our meeting.", "Something urgent has come up — would it be possible to change the time?", "I'm so sorry for the short notice.", "Could we move it to later in the week?"] },
+  { label: 'Confirming and closing', phrases: ["So to confirm, we'll meet on Wednesday at 11.", "I'll send a confirmation email right away.", "I look forward to seeing you then.", "Please let me know if anything changes."] },
+];
+
+const DRILL_QS = [
+  { q: 'You want to ask if someone is free on Thursday. Which question is correct?', opts: ["Are you free on Thursday?","Are you free Thursday?","Do you free on Thursday?","Is you available Thursday?"], ans:0, explain:'"Are you free on + day?" is the standard present simple question for checking availability.' },
+  { q: 'You need to suggest a meeting time politely. Which form is best?', opts: ["Meet me Monday at 9.","I want to meet Monday at 9.","Would Monday at 9 o\'clock suit you?","Is Monday at 9 good?"], ans:2, explain:'"Would + time + suit you?" is a polite conditional form often used in business English for suggestions.' },
+  { q: 'You need to cancel a meeting apologetically. Which sentence is most appropriate?', opts: ["I can\'t come.","I\'m afraid I need to rearrange our meeting — something urgent has come up.","Meeting cancelled.","I won\'t be there."], ans:1, explain:'"I\'m afraid..." softens bad news. Giving a reason and apologising is expected in professional English.' },
+  { q: 'Your colleague says "Tuesday doesn\'t work for me." How do you respond?', opts: ["OK, whatever.","Would Wednesday be more convenient for you?","When do you want then?","Tell me when you\'re free."], ans:1, explain:'"Would + day + be more convenient?" is a polite alternative suggestion using a conditional structure.' },
+  { q: 'Which sentence correctly uses a future form to confirm a meeting?', opts: ["So we meet Wednesday at 11.","So to confirm, we\'ll meet on Wednesday at 11.","So we are meeting Wednesday at 11 o\'clock tomorrow.","So to confirm we meet on Wednesday at 11 o\'clock in future."], ans:1, explain:'"So to confirm, we\'ll meet on..." uses "will" to state a definite future arrangement — natural in spoken confirmations.' },
+  { q: 'You want to ask what the meeting is about. Which indirect question is correct?', opts: ["What the meeting is about?","Could you tell me what the meeting is about?","Could you tell me what is the meeting about?","Can you tell what is about the meeting?"], ans:1, explain:'"Could you tell me + what + statement word order" — indirect questions do not invert subject and verb.' },
+];
+
+const ROLEPLAY_PART1 = [
+  { speaker:'A', text:"[Call Marco. Greet him and introduce yourself. Say you'd like to arrange a meeting to discuss the new sales project.]" },
+  { speaker:'B', text:"Hi Sarah! Good to hear from you. Yes, of course — when were you thinking?" },
+  { speaker:'A', text:"[Check if Marco is free on Monday afternoon at 2 o'clock. Look at your diary from Stage 1.]" },
+  { speaker:'B', text:"Monday at 2? I'm afraid I'm busy then. What about Tuesday morning?" },
+  { speaker:'A', text:"[Say Tuesday morning doesn't work for you either. Suggest Wednesday at 11.]" },
+  { speaker:'B', text:"Wednesday at 11 — yes, that suits me perfectly. Where shall we meet?" },
+  { speaker:'A', text:"[Suggest a venue — your office or a meeting room. Ask if Marco needs the agenda in advance.]" },
+  { speaker:'B', text:"Your office sounds great. And yes, please do send the agenda — it would be very helpful." },
+  { speaker:'A', text:"[Confirm the details: Wednesday at 11, your office. Say you will send a calendar invite and the agenda by email.]" },
+  { speaker:'B', text:"Perfect. I'll look forward to it. See you Wednesday!" },
+];
+
+const ROLEPLAY_PART2 = [
+  { speaker:'A', text:"[Call Marco the day before the meeting. Apologise and explain that something urgent has come up — you need to rearrange.]" },
+  { speaker:'B', text:"Oh, that's a shame — I had it in my diary. Is everything alright?" },
+  { speaker:'A', text:"[Reassure him — nothing serious. Ask if he would be available later in the week, e.g. Wednesday at 2 or Thursday.]" },
+  { speaker:'B', text:"Wednesday at 2 could work actually. Let me just check... yes, I'm free then." },
+  { speaker:'A', text:"[Confirm the new time. Apologise again for the short notice. Say you will update the calendar invite.]" },
+  { speaker:'B', text:"No problem at all — these things happen. I'll see you Wednesday at 2 instead." },
+  { speaker:'A', text:"[Thank him for being flexible. Close the call professionally.]" },
+];
+
+function goTo(n) {
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps(); if(n===2)buildFunctional(); if(n===3&&!drillDone)buildDrill(); if(n===4)buildRoleplay(); if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps() {
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word;c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w) {
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w;const chip=document.getElementById('chip_'+w);if(chip)chip.classList.add('selected');
+}
+function fillGap(gid) {
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const c=document.getElementById('chip_'+cur);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const chip=document.getElementById('chip_'+selectedWord);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps() {
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional() {
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-soft);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--text);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">Notice how questions often use "Would...?" and "Could...?" rather than "Can...?" or "Do...?" — this sounds more professional and polite in business English.</div>`;
+}
+function buildDrill(){drillIndex=0;drillScore=0;renderDrillQ();}
+function renderDrillQ() {
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--text-soft);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--text)">${drillScore===DRILL_QS.length?'Perfect score — well done!':drillScore>=4?'Great job! Review any missed questions.':'Good effort! Review the grammar notes and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options" id="optGrid">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question →</button></div>`;
+}
+function answerDrill(chosen) {
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay() {
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — Sarah Chen (Project Manager)</div><p>You want to arrange a meeting with Marco about the new sales project. Use your diary from Stage 1. In Part 2, you need to rearrange — something urgent came up on Wednesday morning.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — Marco Ricci (Sales Director)</div><p>Wait for Sarah to call you. Check your diary from Stage 1. In Part 2, stay professional and be flexible — suggest an alternative time.</p></div></div>`;
+
+  wrap.innerHTML+=`<p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-soft);margin-bottom:10px;margin-top:4px">Part 1 — Arranging the meeting</p>`;
+  ROLEPLAY_PART1.forEach(line=>{if(line.speaker==='B'){wrap.innerHTML+=`<div class="int-box"><div class="int-label">Marco — Student B</div><div class="int-text">${line.text}</div></div>`;}else{wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Sarah — Student A</div><div class="roleplay-text">${line.text}</div></div>`;}});
+
+  wrap.innerHTML+=`<div style="margin:16px 0 10px;padding:10px 14px;background:var(--surface-muted);border-radius:14px;border:0.5px solid var(--border)"><p style="font-size:13px;color:var(--text-soft)">⏱ A few days later — the day before the meeting...</p></div>`;
+  wrap.innerHTML+=`<p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-soft);margin-bottom:10px">Part 2 — Rearranging the meeting</p>`;
+  ROLEPLAY_PART2.forEach(line=>{if(line.speaker==='B'){wrap.innerHTML+=`<div class="int-box"><div class="int-label">Marco — Student B</div><div class="int-text">${line.text}</div></div>`;}else{wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Sarah — Student A</div><div class="roleplay-text">${line.text}</div></div>`;}});
+
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap roles and try again!</p><p style="font-size:13px;color:var(--text-soft)">This time, it is Marco who needs to rearrange. He has an unexpected client visit on Wednesday. Use the diaries to find a new slot. Try to write a short follow-up email too.</p></div></div>`;
+}
+function buildSummary() {
+  const items=['8 key vocabulary words for scheduling and meetings','Functional phrases for 5 meeting situations (including rescheduling)','6 question form exercises (present simple questions, polite conditionals, indirect questions, future forms)','A two-part role play: arranging then rearranging a meeting using real diary slots'];
+  const hw=["Write a short email (80–100 words) from Sarah to Marco confirming the rearranged meeting details.","Write a dialogue: you phone a colleague to cancel a meeting. They are disappointed. Apologise and suggest three alternative times.","Look at a real business email in English — find examples of polite question forms and future arrangements."];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--text-soft);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Arranging &amp; Rearranging Meetings</p><p style="font-size:13px;color:var(--text-soft)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--text)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--text-soft);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work today! In professional English, it's not just <em>what</em> you say but <em>how</em> you say it — polite question forms and clear confirmations make a great impression.</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>
