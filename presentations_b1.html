@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Making Presentations — B1 Lesson</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --color-bg: #ffffff; --color-bg-secondary: #f6f5f2; --color-bg-tertiary: #f0ede8;
+    --color-text-primary: #1a1a18; --color-text-secondary: #6b6a66;
+    --color-border: rgba(0,0,0,0.12); --color-border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1c1c1a; --color-bg-secondary: #252523; --color-bg-tertiary: #2e2e2b;
+      --color-text-primary: #f0ede8; --color-text-secondary: #9a9891;
+      --color-border: rgba(255,255,255,0.12); --color-border-secondary: rgba(255,255,255,0.22);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--color-bg-tertiary); color: var(--color-text-primary); min-height: 100vh; padding: 2rem 1rem; }
+  .outer { max-width: 720px; margin: 0 auto; }
+  .page-header { text-align: center; margin-bottom: 2rem; }
+  .page-header h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .page-header p { font-size: 14px; color: var(--color-text-secondary); }
+  .lesson-wrap { background: var(--color-bg); border-radius: var(--radius-lg); border: 0.5px solid var(--color-border); padding: 2rem; }
+  .progress-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); background: var(--color-bg-secondary); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .step-dot.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .step-dot.done { background: #EAF3DE; color: #3B6D11; border-color: #639922; }
+  .step-line { flex: 1; height: 0.5px; background: var(--color-border); }
+  .section { display: none; } .section.active { display: block; }
+  .section-header { font-size: 11px; font-weight: 500; color: #185FA5; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .card { background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .card-muted { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .vocab-chip { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: var(--radius-md); padding: 7px 10px; font-size: 13px; font-weight: 500; color: #0C447C; text-align: center; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .vocab-chip:hover { background: #B5D4F4; }
+  .vocab-chip.used { background: var(--color-bg-secondary); color: var(--color-text-secondary); border-color: var(--color-border); opacity: 0.5; }
+  .vocab-chip.selected { outline: 2px solid #185FA5; }
+  .gap-sentence { font-size: 15px; color: var(--color-text-primary); line-height: 2.2; margin-bottom: 10px; }
+  .gap { display: inline-block; min-width: 110px; height: 26px; border-bottom: 2px solid #378ADD; margin: 0 4px; text-align: center; font-weight: 500; color: #185FA5; font-size: 14px; cursor: pointer; vertical-align: bottom; padding: 0 4px; transition: all 0.15s; }
+  .gap.correct { border-bottom-color: #639922; color: #3B6D11; background: #EAF3DE; border-radius: 4px 4px 0 0; }
+  .gap.wrong { border-bottom-color: #E24B4A; color: #A32D2D; background: #FCEBEB; border-radius: 4px 4px 0 0; animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .feedback-msg { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; display: none; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+  .feedback-msg.err { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F7C1C1; }
+  .drill-q { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 14px; line-height: 1.6; }
+  .drill-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 500px) { .drill-options { grid-template-columns: 1fr; } }
+  .opt-btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { background: var(--color-bg-secondary); }
+  .opt-btn.correct { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+  .opt-btn:disabled { cursor: default; }
+  .progress-counter { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .nav-row { display: flex; gap: 8px; margin-top: 1.5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 9px 20px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--color-bg-secondary); }
+  .btn.primary { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .btn.primary:hover { background: #0C447C; }
+  .time-badge { font-size: 11px; color: var(--color-text-secondary); background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 5px 10px; }
+  .roleplay-box { border-left: 3px solid #378ADD; background: #E6F1FB; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .roleplay-label { font-size: 11px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .roleplay-text { font-size: 14px; color: #0C447C; line-height: 1.7; }
+  .int-box { border-left: 3px solid #639922; background: #EAF3DE; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .int-label { font-size: 11px; font-weight: 500; color: #3B6D11; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .int-text { font-size: 14px; color: #27500A; line-height: 1.7; }
+  .tip-box { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: #633806; margin-bottom: 14px; }
+  .score-circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #185FA5; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto 18px; }
+  .score-num { font-size: 24px; font-weight: 500; color: #185FA5; }
+  .score-lbl { font-size: 10px; color: var(--color-text-secondary); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: var(--radius-md); margin-right: 4px; margin-bottom: 4px; }
+  .tag-blue { background: #E6F1FB; color: #0C447C; border: 0.5px solid #B5D4F4; }
+  .tag-green { background: #EAF3DE; color: #27500A; border: 0.5px solid #C0DD97; }
+  .tag-amber { background: #FAEEDA; color: #633806; border: 0.5px solid #FAC775; }
+  .divider { height: 0.5px; background: var(--color-border); margin: 14px 0; }
+  .bullet-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .bullet-dot { margin-top: 6px; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .explain-box { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-top: 8px; display: none; }
+  .role-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .role-card-grid { grid-template-columns: 1fr; } }
+  .role-card { border-radius: var(--radius-lg); padding: 1rem 1.25rem; border: 0.5px solid; }
+  .role-card-a { background: #E6F1FB; border-color: #B5D4F4; }
+  .role-card-b { background: #EAF3DE; border-color: #C0DD97; }
+  .role-card-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .role-card-a .role-card-title { color: #185FA5; }
+  .role-card-b .role-card-title { color: #3B6D11; }
+  .role-card p { font-size: 13px; line-height: 1.7; }
+  .role-card-a p { color: #0C447C; }
+  .role-card-b p { color: #27500A; }
+  .pres-structure { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px,1fr)); gap: 8px; margin-bottom: 14px; }
+  .pres-part { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 10px 12px; text-align: center; }
+  .pres-part-num { font-size: 18px; font-weight: 500; color: #185FA5; margin-bottom: 4px; }
+  .pres-part-label { font-size: 12px; color: var(--color-text-secondary); line-height: 1.4; }
+  .slide-box { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 8px; }
+  .slide-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: #185FA5; margin-bottom: 4px; }
+  .slide-content { font-size: 13px; color: var(--color-text-primary); line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Making Presentations</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <div class="section active" id="sec0">
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Presenting in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="card-muted">
+        <p style="font-size:14px;font-weight:500;margin-bottom:10px">Discuss with your partner:</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. Have you ever given a presentation in English? How did it go?</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. What makes a presentation good? What makes it boring or confusing?</p>
+        <p style="font-size:14px;line-height:1.8">3. Which part of a presentation do you find most difficult — the opening, the middle, or the questions at the end?</p>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Introduce the idea of "signposting" — telling the audience where you are in a presentation. Write the 5 parts on the board: Welcome → Overview → Main content → Conclusion → Questions. Explain that clear signposting helps the audience follow you even when the language is not perfect.</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's scenario — Student A gives a short presentation at a team meeting:</p>
+        <div class="pres-structure">
+          <div class="pres-part"><div class="pres-part-num">1</div><div class="pres-part-label">Welcome &amp; intro</div></div>
+          <div class="pres-part"><div class="pres-part-num">2</div><div class="pres-part-label">Overview</div></div>
+          <div class="pres-part"><div class="pres-part-num">3</div><div class="pres-part-label">Main points</div></div>
+          <div class="pres-part"><div class="pres-part-num">4</div><div class="pres-part-label">Conclusion</div></div>
+          <div class="pres-part"><div class="pres-part-num">5</div><div class="pres-part-label">Q &amp; A</div></div>
+        </div>
+        <p style="font-size:14px;color:var(--color-text-primary);line-height:1.7;margin-bottom:8px"><strong>Topic:</strong> "Should our company allow employees to work from home permanently?" — a 4-minute presentation to the management team, followed by questions.</p>
+        <div>
+          <span class="tag tag-blue">Business English</span>
+          <span class="tag tag-green">Presenter + audience</span>
+          <span class="tag tag-amber">Q&amp;A included</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary →</button>
+      </div>
+    </div>
+
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key presentation vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word from the box, then click a blank to fill it. Hover over a word to see its definition.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Signposting phrases for presentations</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Presentation question forms drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">The remote working presentation</div>
+      <div class="section-sub">12 minutes · Pair work</div>
+      <div class="tip-box"><strong>How to use:</strong> Student A is the presenter. Student B is an audience member who will ask questions. Student A should use the slide outline and signposting phrases. After the Q&amp;A, swap roles with a new topic.</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">← back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again ↺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0,selectedWord=null,gapAnswers={},drillScore=0,drillIndex=0,drillDone=false;
+
+const WORDS=[
+  {word:'signpost',   def:'a word or phrase that guides the audience through a presentation'},
+  {word:'outline',    def:'a brief summary of the main points, given at the start'},
+  {word:'highlight',  def:'to draw attention to the most important point'},
+  {word:'elaborate',  def:'to explain something in more detail'},
+  {word:'summarise',  def:'to give a short account of the main points'},
+  {word:'slide',      def:'one page of a visual presentation (e.g. PowerPoint)'},
+  {word:'findings',   def:'the results or conclusions from research or analysis'},
+  {word:'conclude',   def:'to bring a presentation to an end; to make a final point'},
+];
+
+const GAPS=[
+  {id:'g0',before:"Good morning everyone. I'd like to start by giving you a brief ",blank:'outline',after:' of what I\'ll be covering today.'},
+  {id:'g1',before:'I\'d like to ',blank:'highlight',after:' one key finding — productivity actually increased by 18% when staff worked from home.'},
+  {id:'g2',before:'Could you ',blank:'elaborate',after:' on that point a little? I\'d like to understand the data better.'},
+  {id:'g3',before:"To ",blank:'summarise',after:' the main points: remote working improves wellbeing, reduces commuting costs, and maintains productivity.'},
+  {id:'g4',before:'As you can see on this ',blank:'slide',after:', the survey results show that 72% of employees prefer hybrid working.'},
+  {id:'g5',before:'I\'d like to use a ',blank:'signpost',after:" here — let's now move on to the second point."},
+  {id:'g6',before:'The ',blank:'findings',after:' of the six-month trial were very positive across all three departments.'},
+  {id:'g7',before:"To ",blank:'conclude',after:", I'd like to recommend that we introduce a permanent hybrid working policy."},
+];
+
+const FUNC_CATS=[
+  {label:'Opening the presentation',phrases:[
+    "Good morning, everyone. Thank you for being here.",
+    "The topic of my presentation today is...",
+    "I'll begin by..., then move on to..., and finally...",
+    "Please feel free to ask questions at the end.",
+  ]},
+  {label:'Signposting — moving between sections',phrases:[
+    "So, let's move on to my second point.",
+    "Turning now to the question of...",
+    "As you can see from this slide...",
+    "This brings me to my next point.",
+  ]},
+  {label:'Highlighting key points',phrases:[
+    "I'd like to highlight the most important finding.",
+    "The key point here is...",
+    "What's particularly significant is...",
+    "I want to draw your attention to...",
+  ]},
+  {label:'Concluding',phrases:[
+    "To summarise the main points...",
+    "In conclusion, I'd like to recommend...",
+    "So, to bring this together...",
+    "Thank you for listening. I'd now be happy to take any questions.",
+  ]},
+  {label:'Handling questions (Q&A)',phrases:[
+    "That's a great question. What I'd say is...",
+    "I'm glad you raised that point.",
+    "I don't have that data to hand, but I'll find out and come back to you.",
+    "Could you clarify what you mean by...?",
+  ]},
+];
+
+const DRILL_QS=[
+  {q:'You want to introduce the structure of your presentation. Which sentence is best?',
+   opts:["I will talk about three things.","I\'ll begin by looking at the background, then move on to the data, and finally make a recommendation.","My presentation has three parts.","First, second, third — these are my parts."],
+   ans:1,explain:'Listing the parts with "I\'ll begin by... then move on to... and finally..." gives the audience a clear roadmap and is a standard signposting technique.'},
+  {q:'You want to move to your next point smoothly. Which signpost is most natural?',
+   opts:["Next thing.","OK so now I do my second point.","So, let\'s turn now to the second point — the financial implications.","Number two."],
+   ans:2,explain:'"So, let\'s turn now to..." is a natural spoken signpost that signals a transition and reminds the audience where they are.'},
+  {q:'An audience member asks a question you don\'t know the answer to. What do you say?',
+   opts:["I don\'t know.","That\'s not in my presentation.","That\'s a great question. I don\'t have that data to hand, but I\'ll find out and come back to you.","Please ask someone else."],
+   ans:2,explain:'Acknowledging the question positively and promising to follow up is the professional way to handle gaps in your knowledge during a Q&A.'},
+  {q:'You want to draw attention to something important on your slide. Which phrase is correct?',
+   opts:["Look at this.","I\'d like to draw your attention to this figure here — productivity rose by 18%.","See this number.","Attention: this number is important."],
+   ans:1,explain:'"I\'d like to draw your attention to..." is a formal, natural way to highlight a specific piece of data in a presentation.'},
+  {q:'You want to ask an audience member to explain their question. Which indirect form is correct?',
+   opts:["What do you mean?","Could you clarify what you mean by \'hybrid policy\'?","Clarify your question please.","Could you clarify what do you mean by that?"],
+   ans:1,explain:'"Could you clarify what you mean by...?" uses indirect question structure (statement word order) and is polite and professional.'},
+  {q:'You are closing your presentation. Which concluding phrase is most appropriate?',
+   opts:["That\'s the end.","In conclusion, I\'d like to recommend that we introduce a permanent hybrid working policy. Thank you for listening.","I\'m finished now. Questions?","My presentation concludes now."],
+   ans:1,explain:'"In conclusion, I\'d like to recommend..." clearly signals the end of the content and gives a final strong message before inviting questions.'},
+];
+
+const SLIDES=[
+  {label:'Slide 1 — Title',content:'Should we allow permanent remote working?\nPresenter: [Your name] | Department: Operations | Date: today'},
+  {label:'Slide 2 — Overview',content:'1. Background: the 6-month trial\n2. Key data and findings\n3. Benefits and challenges\n4. Recommendation'},
+  {label:'Slide 3 — The trial',content:'• 45 employees worked from home full-time (Oct–Mar)\n• Productivity measured weekly using KPI tracking\n• Employee satisfaction surveys completed monthly'},
+  {label:'Slide 4 — Key findings',content:'• Productivity: +18% on average\n• Employee wellbeing scores: improved in 78% of cases\n• Commuting costs saved: average £320/month per person'},
+  {label:'Slide 5 — Challenges',content:'• Team communication: some difficulties reported\n• New starters: harder to onboard remotely\n• Not all roles suitable for full remote work'},
+  {label:'Slide 6 — Recommendation',content:'Introduce a permanent hybrid policy:\n• 3 days home / 2 days office\n• Mandatory in-office days for new starters (first 3 months)\n• Regular team check-ins (weekly, in person)'},
+];
+
+const ROLEPLAY=[
+  {speaker:'Presenter',text:"[Welcome the audience. Give your name and the topic. Tell them the structure of your presentation — 4 sections plus Q&A. Use: 'I'll begin by..., then move on to..., and finally...']"},
+  {speaker:'Audience', text:"Thank you. Before you start — could you tell us roughly how long the presentation will be?"},
+  {speaker:'Presenter',text:"[Answer the question — approximately 4 minutes plus questions. Then begin Section 1: the background. Explain the 6-month trial using the Slide 3 data. Use: 'As you can see from this slide...']"},
+  {speaker:'Audience', text:"Interesting. I wasn't aware the trial included so many departments. Can you tell us more about how productivity was measured?"},
+  {speaker:'Presenter',text:"[Respond to the question. Say it was tracked using weekly KPIs. Then signpost to your next section. Use: 'This brings me to my next point...' Present the key findings from Slide 4.]"},
+  {speaker:'Audience', text:"Those productivity figures are impressive. But how do we know remote working caused the increase, rather than other factors?"},
+  {speaker:'Presenter',text:"[Acknowledge this is a valid point. Say the data was controlled for seasonal variation. Then move to Slide 5 — the challenges. Use: 'I'd like to highlight that the results weren't all positive...']"},
+  {speaker:'Audience', text:"What specifically were the communication difficulties? Can you elaborate on that?"},
+  {speaker:'Presenter',text:"[Elaborate briefly — delayed responses, fewer informal conversations. Then transition to your recommendation. Use: 'Turning now to the recommendation...' Present the hybrid policy from Slide 6.]"},
+  {speaker:'Audience', text:"The hybrid model sounds reasonable. But won't the two mandatory office days be expensive for employees who have moved far from the office?"},
+  {speaker:'Presenter',text:"[Acknowledge the concern — it's fair. Say the company would provide a travel allowance. Then conclude. Use: 'To summarise the main points...' and 'In conclusion, I'd like to recommend...']"},
+  {speaker:'Audience', text:"Thank you — that was very clear. I have one final question: when would this policy start, if approved?"},
+  {speaker:'Presenter',text:"[Answer: ideally next quarter, pending board approval. Thank the audience. Invite any final questions. Use: 'Thank you for listening. I'd now be happy to take any questions.']"},
+];
+
+function goTo(n){
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps();if(n===2)buildFunctional();if(n===3&&!drillDone)buildDrill();if(n===4)buildRoleplay();if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps(){
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word;c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w){
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w;const chip=document.getElementById('chip_'+w);if(chip)chip.classList.add('selected');
+}
+function fillGap(gid){
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const c=document.getElementById('chip_'+cur);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const chip=document.getElementById('chip_'+selectedWord);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps(){
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional(){
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--color-text-primary);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">Signposting is the most important skill for B1 presentations. Even simple language becomes clear when you tell your audience what's coming next, where you are now, and what you have just said.</div>`;
+}
+function buildDrill(){drillIndex=0;drillScore=0;renderDrillQ();}
+function renderDrillQ(){
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--color-text-primary)">${drillScore===DRILL_QS.length?'Perfect score — well done!':drillScore>=4?'Great job! Review any missed questions.':'Good effort! Review the grammar notes and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options" id="optGrid">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question →</button></div>`;
+}
+function answerDrill(chosen){
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay(){
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — Presenter</div><p>You are presenting the remote working trial results. Use the slide outline below and the signposting phrases from Stage 3. Speak naturally — you don't need to read word for word.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — Audience member</div><p>Listen carefully. Ask the questions shown in the script. Also try to add 1–2 questions of your own. Be interested and professional — not challenging.</p></div></div>`;
+  wrap.innerHTML+=`<div class="card" style="margin-bottom:14px"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">Presentation outline — use these slides as your guide</p>${SLIDES.map(s=>`<div class="slide-box"><div class="slide-label">${s.label}</div><div class="slide-content">${s.content.replace(/\n/g,'<br>')}</div></div>`).join('')}</div>`;
+  ROLEPLAY.forEach(line=>{if(line.speaker==='Audience'){wrap.innerHTML+=`<div class="int-box"><div class="int-label">Audience — Student B</div><div class="int-text">${line.text}</div></div>`;}else{wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Presenter — Student A</div><div class="roleplay-text">${line.text}</div></div>`;}});
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap roles — new topic!</p><p style="font-size:13px;color:var(--color-text-secondary)">Student B now presents on this topic: <em>"Should our company reduce its office space and move to a fully hot-desking model?"</em> Use the same 5-part structure. Student A asks at least 3 questions during the Q&A.</p></div></div>`;
+}
+function buildSummary(){
+  const items=['8 key vocabulary words for presentations','Signposting phrases for 5 stages: opening, transitions, highlighting, concluding, and Q&A','6 question form exercises (presentation structure language, indirect Q&A responses, signposting, concluding)','A full guided presentation with slide outline, interactive Q&A, and a second topic extension'];
+  const hw=["Prepare and record a 2-minute presentation on a topic you know well. Use at least 4 signposting phrases.","Write an introduction for a presentation on: 'The benefits of learning a second language'. Include the structure, topic, and an engaging opening line.","Watch a short TED Talk in English (5–7 minutes). Write down every signposting phrase the speaker uses."];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Making Presentations</p><p style="font-size:13px;color:var(--color-text-secondary)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--color-text-primary)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work today! Remember: a confident presentation is not about perfect grammar — it's about clear structure, good signposting, and engaging your audience. You have the tools — now practise!</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>
