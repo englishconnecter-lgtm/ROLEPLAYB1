@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparing Holiday Destinations — B1 Lesson</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --color-bg: #ffffff; --color-bg-secondary: #f6f5f2; --color-bg-tertiary: #f0ede8;
+    --color-text-primary: #1a1a18; --color-text-secondary: #6b6a66;
+    --color-border: rgba(0,0,0,0.12); --color-border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1c1c1a; --color-bg-secondary: #252523; --color-bg-tertiary: #2e2e2b;
+      --color-text-primary: #f0ede8; --color-text-secondary: #9a9891;
+      --color-border: rgba(255,255,255,0.12); --color-border-secondary: rgba(255,255,255,0.22);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:
+      radial-gradient(circle at top left, rgba(24,95,165,0.10), transparent 28%),
+      radial-gradient(circle at top right, rgba(29,158,117,0.10), transparent 24%),
+      linear-gradient(180deg, #f6f1eb 0%, #ece7e0 100%);
+    color: var(--color-text-primary); min-height: 100vh; padding: 2.25rem 1rem 3rem; }
+  .outer { max-width: 880px; margin: 0 auto; }
+  .page-header { text-align: center; margin-bottom: 1.5rem; }
+  .page-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 6px; }
+  .page-header p { font-size: 14px; color: var(--color-text-secondary); }
+  .lesson-wrap { background: rgba(255,255,255,0.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.55); padding: 2rem; box-shadow: 0 24px 80px rgba(39,32,24,0.12); }
+  .progress-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); background: var(--color-bg-secondary); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .step-dot.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .step-dot.done { background: #EAF3DE; color: #3B6D11; border-color: #639922; }
+  .step-line { flex: 1; height: 0.5px; background: var(--color-border); }
+  .section { display: none; } .section.active { display: block; }
+  .section-header { font-size: 11px; font-weight: 500; color: #185FA5; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-size: 24px; font-weight: 700; color: var(--color-text-primary); margin-bottom: 6px; letter-spacing: -0.02em; }
+  .section-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .card { background: rgba(255,255,255,0.92); border: 1px solid rgba(22,41,62,0.08); border-radius: 20px; padding: 1.1rem 1.35rem; margin-bottom: 14px; box-shadow: 0 12px 28px rgba(24,40,60,0.06); }
+  .card-muted { background: linear-gradient(180deg, rgba(255,255,255,0.74), rgba(247,244,239,0.94)); border: 1px solid rgba(22,41,62,0.08); border-radius: 20px; padding: 1.1rem 1.35rem; margin-bottom: 14px; box-shadow: 0 10px 24px rgba(24,40,60,0.05); }
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .vocab-chip { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: var(--radius-md); padding: 7px 10px; font-size: 13px; font-weight: 500; color: #0C447C; text-align: center; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .vocab-chip:hover { background: #B5D4F4; }
+  .vocab-chip.used { background: var(--color-bg-secondary); color: var(--color-text-secondary); border-color: var(--color-border); opacity: 0.5; }
+  .vocab-chip.selected { outline: 2px solid #185FA5; }
+  .gap-sentence { font-size: 15px; color: var(--color-text-primary); line-height: 2.2; margin-bottom: 10px; }
+  .gap { display: inline-block; min-width: 110px; height: 26px; border-bottom: 2px solid #378ADD; margin: 0 4px; text-align: center; font-weight: 500; color: #185FA5; font-size: 14px; cursor: pointer; vertical-align: bottom; padding: 0 4px; transition: all 0.15s; }
+  .gap.correct { border-bottom-color: #639922; color: #3B6D11; background: #EAF3DE; border-radius: 4px 4px 0 0; }
+  .gap.wrong { border-bottom-color: #E24B4A; color: #A32D2D; background: #FCEBEB; border-radius: 4px 4px 0 0; animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .feedback-msg { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; display: none; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+  .feedback-msg.err { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F7C1C1; }
+  .drill-q { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 14px; line-height: 1.6; }
+  .drill-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 500px) { .drill-options { grid-template-columns: 1fr; } }
+  .opt-btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { background: var(--color-bg-secondary); }
+  .opt-btn.correct { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+  .opt-btn:disabled { cursor: default; }
+  .progress-counter { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .nav-row { display: flex; gap: 8px; margin-top: 1.5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 9px 20px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--color-bg-secondary); }
+  .btn.primary { background: linear-gradient(135deg, #185FA5, #1D9E75); color: #fff; border-color: transparent; box-shadow: 0 10px 22px rgba(24,95,165,0.22); }
+  .btn.primary:hover { background: linear-gradient(135deg, #0C447C, #16785a); }
+  .time-badge { font-size: 11px; color: var(--color-text-secondary); background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 5px 10px; }
+  .roleplay-box { border-left: 3px solid #378ADD; background: #E6F1FB; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .roleplay-label { font-size: 11px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .roleplay-text { font-size: 14px; color: #0C447C; line-height: 1.7; }
+  .int-box { border-left: 3px solid #1D9E75; background: #E1F5EE; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .int-label { font-size: 11px; font-weight: 500; color: #085041; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .int-text { font-size: 14px; color: #04342C; line-height: 1.7; }
+  .tip-box { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: #633806; margin-bottom: 14px; }
+  .score-circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #185FA5; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto 18px; }
+  .score-num { font-size: 24px; font-weight: 500; color: #185FA5; }
+  .score-lbl { font-size: 10px; color: var(--color-text-secondary); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: var(--radius-md); margin-right: 4px; margin-bottom: 4px; }
+  .tag-blue { background: #E6F1FB; color: #0C447C; border: 0.5px solid #B5D4F4; }
+  .tag-green { background: #EAF3DE; color: #27500A; border: 0.5px solid #C0DD97; }
+  .tag-amber { background: #FAEEDA; color: #633806; border: 0.5px solid #FAC775; }
+  .tag-teal { background: #E1F5EE; color: #085041; border: 0.5px solid #9FE1CB; }
+  .divider { height: 0.5px; background: var(--color-border); margin: 14px 0; }
+  .bullet-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .bullet-dot { margin-top: 6px; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .explain-box { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-top: 8px; display: none; }
+  .role-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .role-card-grid { grid-template-columns: 1fr; } }
+  .role-card { border-radius: var(--radius-lg); padding: 1rem 1.25rem; border: 0.5px solid; }
+  .role-card-a { background: #E6F1FB; border-color: #B5D4F4; }
+  .role-card-b { background: #E1F5EE; border-color: #9FE1CB; }
+  .role-card-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .role-card-a .role-card-title { color: #185FA5; }
+  .role-card-b .role-card-title { color: #085041; }
+  .role-card p { font-size: 13px; line-height: 1.7; }
+  .role-card-a p { color: #0C447C; }
+  .role-card-b p { color: #04342C; }
+  .dest-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  @media (max-width: 520px) { .dest-grid { grid-template-columns: 1fr; } }
+  .dest-card { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 10px 14px; }
+  .dest-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  .dest-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--color-text-secondary); padding: 3px 0; border-bottom: 0.5px solid var(--color-border); }
+  .dest-row:last-child { border-bottom: none; }
+  .dest-val { font-weight: 500; color: var(--color-text-primary); }
+
+  .hero-panel {
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+    padding: 1.6rem;
+    border-radius: 24px;
+    margin-bottom: 16px;
+    background:
+      linear-gradient(115deg, rgba(10,31,50,0.78), rgba(10,31,50,0.18) 55%, rgba(10,31,50,0.05)),
+      url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    color: #fff;
+    box-shadow: 0 24px 60px rgba(16, 25, 36, 0.24);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero-panel h3 {
+    font-size: 34px;
+    line-height: 1.08;
+    max-width: 440px;
+    margin-bottom: 12px;
+    letter-spacing: -0.04em;
+  }
+  .hero-panel p {
+    max-width: 470px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 18px;
+  }
+  .hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 10px;
+    max-width: 520px;
+  }
+  .hero-metric {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 12px 14px;
+  }
+  .hero-metric strong {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+  .hero-metric span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.78);
+  }
+  .intro-split {
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 720px) {
+    .intro-split, .hero-metrics { grid-template-columns: 1fr; }
+    .hero-panel { min-height: auto; }
+    .hero-panel h3 { font-size: 28px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Comparing Holiday Destinations</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <div class="section active" id="sec0">
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Talking about holidays in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="hero-panel">
+        <div class="hero-badge">Travel English · B1 speaking</div>
+        <h3>Choose the best summer escape and justify your decision in natural English.</h3>
+        <p>Students compare three attractive destinations, weigh up price, climate, culture and travel time, then reach one final decision using clear comparative language.</p>
+        <div class="hero-metrics">
+          <div class="hero-metric"><strong>3</strong><span>destinations to compare</span></div>
+          <div class="hero-metric"><strong>40 min</strong><span>interactive lesson flow</span></div>
+          <div class="hero-metric"><strong>B1</strong><span>comparatives + discussion</span></div>
+        </div>
+      </div>
+      <div class="intro-split">
+        <div class="card-muted">
+          <p style="font-size:14px;font-weight:600;margin-bottom:10px">Discuss with your partner:</p>
+          <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. What is your ideal holiday? (beach, city, mountains, adventure?)</p>
+          <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. What factors are most important when choosing a destination? (price, weather, culture, safety...)</p>
+          <p style="font-size:14px;line-height:1.8">3. Have you ever changed your mind about a holiday destination after comparing it with another? What happened?</p>
+        </div>
+        <div class="card">
+          <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#185FA5;margin-bottom:10px">Lesson focus</p>
+          <p style="font-size:14px;line-height:1.75;margin-bottom:10px">Compare destinations confidently, justify preferences, and negotiate a final holiday plan using more natural B1 travel vocabulary.</p>
+          <div>
+            <span class="tag tag-blue">Comparative forms</span>
+            <span class="tag tag-teal">Decision-making</span>
+            <span class="tag tag-amber">Pair discussion</span>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Review comparative and superlative forms before starting. Write examples on the board: cheap &gt; cheaper &gt; cheapest / expensive &gt; more expensive &gt; most expensive / good &gt; better &gt; best / far &gt; further &gt; furthest. Ask students to give one comparison sentence about two places they know.</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's scenario — comparing three destinations for a two-week summer holiday:</p>
+        <div class="dest-grid">
+          <div class="dest-card">
+            <div class="dest-name">Lisbon, Portugal</div>
+            <div class="dest-row"><span>Flight</span><span class="dest-val">2.5 hrs</span></div>
+            <div class="dest-row"><span>Cost/day</span><span class="dest-val">&#x20AC;90</span></div>
+            <div class="dest-row"><span>July temp</span><span class="dest-val">28&#x00B0;C</span></div>
+            <div class="dest-row"><span>Beaches</span><span class="dest-val">Yes</span></div>
+            <div class="dest-row"><span>Nightlife</span><span class="dest-val">Excellent</span></div>
+            <div class="dest-row"><span>Culture</span><span class="dest-val">Rich</span></div>
+          </div>
+          <div class="dest-card">
+            <div class="dest-name">Kyoto, Japan</div>
+            <div class="dest-row"><span>Flight</span><span class="dest-val">12 hrs</span></div>
+            <div class="dest-row"><span>Cost/day</span><span class="dest-val">&#x20AC;140</span></div>
+            <div class="dest-row"><span>July temp</span><span class="dest-val">33&#x00B0;C</span></div>
+            <div class="dest-row"><span>Beaches</span><span class="dest-val">No</span></div>
+            <div class="dest-row"><span>Nightlife</span><span class="dest-val">Moderate</span></div>
+            <div class="dest-row"><span>Culture</span><span class="dest-val">Unique</span></div>
+          </div>
+          <div class="dest-card">
+            <div class="dest-name">Costa Rica</div>
+            <div class="dest-row"><span>Flight</span><span class="dest-val">11 hrs</span></div>
+            <div class="dest-row"><span>Cost/day</span><span class="dest-val">&#x20AC;110</span></div>
+            <div class="dest-row"><span>July temp</span><span class="dest-val">26&#x00B0;C</span></div>
+            <div class="dest-row"><span>Beaches</span><span class="dest-val">Yes</span></div>
+            <div class="dest-row"><span>Nightlife</span><span class="dest-val">Good</span></div>
+            <div class="dest-row"><span>Culture</span><span class="dest-val">Nature-focused</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary &#x2192;</button>
+      </div>
+    </div>
+
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key holiday &amp; comparison vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word from the box, then click a blank to fill it. Hover over a word to see its definition.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Phrases for comparing and evaluating</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Comparatives drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">Choosing the holiday</div>
+      <div class="section-sub">12 minutes · Pair work</div>
+      <div class="tip-box"><strong>How to use:</strong> Student A prefers Lisbon. Student B prefers Costa Rica. Both want Kyoto as a backup. You must discuss all three options using comparative and superlative forms and agree on ONE destination.</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">&#x2190; back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again &#x21BA;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0,selectedWord=null,gapAnswers={},drillScore=0,drillIndex=0,drillDone=false;
+
+const WORDS=[
+  {word:'affordable',  def:'not too expensive; reasonable in price'},
+  {word:'destination', def:'the place you are travelling to'},
+  {word:'climate',     def:'the typical weather conditions of an area'},
+  {word:'touristy',    def:'visited by many tourists; sometimes used negatively'},
+  {word:'off the beaten track', def:'away from popular tourist areas; less well-known'},
+  {word:'worthwhile',  def:'worth doing because the benefits outweigh the costs'},
+  {word:'stunning',    def:'extremely beautiful or impressive'},
+  {word:'crowded',     def:'full of people, often uncomfortably so'},
+];
+
+const GAPS=[
+  {id:'g0',before:'Lisbon is far more ',blank:'affordable',after:' than Tokyo — the cost per day is almost half as much.'},
+  {id:'g1',before:'Have you already chosen your ',blank:'destination',after:', or are you still deciding between a few options?'},
+  {id:'g2',before:'The ',blank:'climate',after:' in Costa Rica in July is warm but quite humid, with occasional rain.'},
+  {id:'g3',before:'I want to avoid anywhere too ',blank:'touristy',after:' — I prefer to experience local life, not tourist traps.'},
+  {id:'g4',before:'Kyoto is a bit ',blank:'off the beaten track',after:' compared to Tokyo, which is perfect for us.'},
+  {id:'g5',before:'The flight is long, but I think it is ',blank:'worthwhile',after:' — the experience is unlike anything else.'},
+  {id:'g6',before:'The scenery in Costa Rica is absolutely ',blank:'stunning',after:' — the rainforests are breathtaking.'},
+  {id:'g7',before:'July can be very ',blank:'crowded',after:' in Lisbon — the beaches get extremely busy.'},
+];
+
+const FUNC_CATS=[
+  {label:'Making comparisons (comparative)',phrases:[
+    'Lisbon is cheaper than Costa Rica.',
+    'The flight to Japan is much longer than the flight to Portugal.',
+    'Costa Rica is slightly more expensive than Lisbon.',
+    'Kyoto is far more culturally unique than either of the others.',
+  ]},
+  {label:'Making comparisons (superlative)',phrases:[
+    'Lisbon is the most affordable of the three.',
+    'Japan has the most distinctive culture.',
+    'Costa Rica is the best option for nature lovers.',
+    'The flight to Kyoto is the longest by far.',
+  ]},
+  {label:'Expressing preferences',phrases:[
+    'I would prefer Lisbon because it is closer and cheaper.',
+    'For me, the most important factor is the weather.',
+    'Personally, I think Costa Rica offers the best value.',
+    'I am more interested in culture than beaches.',
+  ]},
+  {label:'Weighing up pros and cons',phrases:[
+    'On the one hand, Japan is fascinating. On the other hand, it is very expensive.',
+    'The main advantage of Lisbon is the short flight time.',
+    'The disadvantage of Costa Rica is the long journey.',
+    'Despite the cost, I think Kyoto would be the most memorable.',
+  ]},
+  {label:'Reaching a decision',phrases:[
+    'Taking everything into account, I think Lisbon is the best choice.',
+    'On balance, I would go with Costa Rica.',
+    'All things considered, the most sensible option is...',
+    'I think we can both agree that...',
+  ]},
+];
+
+const DRILL_QS=[
+  {q:'Which sentence uses the comparative form correctly?',
+   opts:['Japan is more far than Portugal.','Japan is farther from the UK than Portugal.','Japan is more farther than Portugal.','Japan is the farther from the UK.'],
+   ans:1,
+   explain:'"Farther" is the comparative of "far" used for physical distance. "Further" can also be used. Never use "more far".'},
+  {q:'Which sentence uses the superlative correctly?',
+   opts:['Lisbon is most affordable of the three.','Lisbon is the most affordable of the three.','Lisbon is the more affordable of the three.','Lisbon is most the affordable.'],
+   ans:1,
+   explain:'Superlatives need "the" before them: "the most affordable". With three or more options, always use the superlative, not the comparative.'},
+  {q:'You want to compare two things with a small difference. Which phrase is correct?',
+   opts:['Costa Rica is very more expensive than Lisbon.','Costa Rica is slightly more expensive than Lisbon.','Costa Rica is a little bit most expensive.','Costa Rica is not so much expensive.'],
+   ans:1,
+   explain:'"Slightly more + adjective" expresses a small comparative difference. Other options: "a little more", "marginally more".'},
+  {q:'Which sentence correctly uses "as...as" for equal comparison?',
+   opts:['Kyoto is as much cultural as Lisbon.','Kyoto is as culturally rich as any destination in the world.','Kyoto is cultural as Lisbon.','Kyoto is as cultural so Lisbon.'],
+   ans:1,
+   explain:'"As + adjective/adverb + as" is the structure for equal comparisons. Note the adverb form "culturally" before "rich".'},
+  {q:'You want to say the weather in Japan is much hotter than in Portugal. Which is correct?',
+   opts:['Japan is much more hot than Portugal in July.','Japan is much hotter than Portugal in July.','Japan is more hotter than Portugal.','Japan is the most hot country.'],
+   ans:1,
+   explain:'One-syllable adjectives form comparatives by adding -er: hot > hotter. Never add "more" before -er comparatives.'},
+  {q:'You want to express a preference. Which structure is most natural?',
+   opts:['I prefer Lisbon because is cheaper.','I would prefer Lisbon because it is cheaper and closer.','I prefer to Lisbon because cheaper.','For me Lisbon more better.'],
+   ans:1,
+   explain:'"I would prefer... because it is..." is a natural, complete sentence for expressing and justifying a preference.'},
+];
+
+const ROLEPLAY=[
+  {speaker:'A', text:'[Start the conversation. Say you need to agree on one holiday destination. Ask Student B which of the three options they are most interested in.]'},
+  {speaker:'B', text:'Honestly, I think Costa Rica sounds the most exciting. The nature and wildlife are supposed to be absolutely stunning. What about you?'},
+  {speaker:'A', text:'[Say you prefer Lisbon. Give two comparative reasons: it is cheaper and the flight is much shorter. Ask Student B what they think about the price difference.]'},
+  {speaker:'B', text:'The price is definitely a factor. Lisbon is about 35% cheaper per day. But I think the experience in Costa Rica is more unique. Lisbon feels a bit touristy in July.'},
+  {speaker:'A', text:'[Agree that July can be crowded in Lisbon. But argue it is still the most affordable option overall. Ask what Student B thinks about Kyoto as an alternative.]'},
+  {speaker:'B', text:'Kyoto is fascinating — probably the most culturally unique of the three. But the flight is the longest, and it is the most expensive. I am not sure it is worthwhile for a two-week trip.'},
+  {speaker:'A', text:'[Agree that the cost and distance make Kyoto less practical. Compare it directly to the other two. Say that between Lisbon and Costa Rica, you think Lisbon offers better value for money.]'},
+  {speaker:'B', text:'I see your point about value. But for adventure, Costa Rica is far better. The rainforests, the beaches, the wildlife — you cannot find that in Lisbon. Is the extra cost really that significant?'},
+  {speaker:'A', text:'[Acknowledge Costa Rica is more adventurous. Use a pros and cons phrase. Say: on the one hand, Costa Rica is more exciting. On the other hand, Lisbon is significantly cheaper and more accessible.]'},
+  {speaker:'B', text:'OK, fair enough. Taking everything into account, perhaps Lisbon is the more sensible choice. Although I would love to go somewhere less touristy. Could we visit Costa Rica another time?'},
+  {speaker:'A', text:'[Agree with enthusiasm. Confirm Lisbon as the final decision. Use a concluding phrase. Also say what you are most looking forward to about Lisbon and ask Student B the same question.]'},
+  {speaker:'B', text:'I am most looking forward to the food and the Fado music. Right, so Lisbon it is. Shall we start looking at flights?'},
+];
+
+function goTo(n){
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps();if(n===2)buildFunctional();if(n===3&&!drillDone)buildDrill();if(n===4)buildRoleplay();if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps(){
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word.replace(/\s/g,'_');c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w){
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w;const key=w.replace(/\s/g,'_');const chip=document.getElementById('chip_'+key);if(chip)chip.classList.add('selected');
+}
+function fillGap(gid){
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const key=cur.replace(/\s/g,'_');const c=document.getElementById('chip_'+key);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const key=selectedWord.replace(/\s/g,'_');const chip=document.getElementById('chip_'+key);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps(){
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional(){
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--color-text-primary);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">Use "slightly", "a little", "much", "far", and "considerably" to show the degree of difference. Compare: "Japan is more expensive" vs "Japan is considerably more expensive" — the second is much more precise and natural.</div>`;
+}
+function buildDrill(){drillIndex=0;drillScore=0;renderDrillQ();}
+function renderDrillQ(){
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--color-text-primary)">${drillScore===DRILL_QS.length?'Perfect score!':drillScore>=4?'Great job!':'Good effort! Review and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question &#x2192;</button></div>`;
+}
+function answerDrill(chosen){
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay(){
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — favours Lisbon</div><p>You want Lisbon: shorter flight (2.5 hrs), cheapest option (90 euros/day), warm weather, great food and nightlife. You are worried Costa Rica is too far and too expensive for two weeks.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — favours Costa Rica</div><p>You want Costa Rica: stunning nature, wildlife, beaches, and a more adventurous experience. You think the extra cost is worthwhile. You find Lisbon a bit touristy in summer.</p></div></div>`;
+  wrap.innerHTML+=`<div class="tip-box" style="margin-bottom:14px">Use the destination data from Stage 1 to support your arguments. Try to use at least 6 comparative or superlative forms across the conversation.</div>`;
+  ROLEPLAY.forEach(line=>{
+    if(line.speaker==='B'){
+      wrap.innerHTML+=`<div class="int-box"><div class="int-label">Student B</div><div class="int-text">${line.text}</div></div>`;
+    } else {
+      wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Student A</div><div class="roleplay-text">${line.text}</div></div>`;
+    }
+  });
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap and try again with new preferences!</p><p style="font-size:13px;color:var(--color-text-secondary)">This time, Student A prefers Kyoto and Student B prefers Lisbon. Use the data table from Stage 1 and reach a different conclusion. Try to use 3 superlative sentences this time.</p></div></div>`;
+}
+function buildSummary(){
+  const items=['8 holiday and comparison vocabulary words','Comparative and superlative phrases for 5 functions: comparing, superlatives, preferences, pros and cons, and decisions','6 comparative grammar exercises (comparative -er, superlative, slightly more, as...as, preference structures)','A decision-making role play using a real data comparison table for 3 destinations'];
+  const hw=['Write a short comparison (100-120 words) of two cities you know well. Use at least 4 comparative and 2 superlative forms.','Look at a travel website and find 3 destinations. Write 5 comparison sentences using the information provided.','With a partner, compare two films, two restaurants, or two sports teams using the language from this lesson.'];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Comparing Holiday Destinations</p><p style="font-size:13px;color:var(--color-text-secondary)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--color-text-primary)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work! Comparing things confidently in English is one of the most useful everyday skills. The key is using the right form (comparative vs superlative) and adding degree adverbs like "much", "far", and "slightly" to make your language more precise and natural.</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>

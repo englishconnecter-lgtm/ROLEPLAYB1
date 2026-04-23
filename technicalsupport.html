@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asking for Technical Support — B1 Lesson</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --color-bg: #ffffff; --color-bg-secondary: #f6f5f2; --color-bg-tertiary: #f0ede8;
+    --color-text-primary: #1a1a18; --color-text-secondary: #6b6a66;
+    --color-border: rgba(0,0,0,0.12); --color-border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1c1c1a; --color-bg-secondary: #252523; --color-bg-tertiary: #2e2e2b;
+      --color-text-primary: #f0ede8; --color-text-secondary: #9a9891;
+      --color-border: rgba(255,255,255,0.12); --color-border-secondary: rgba(255,255,255,0.22);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--color-bg-tertiary); color: var(--color-text-primary); min-height: 100vh; padding: 2rem 1rem; }
+  .outer { max-width: 720px; margin: 0 auto; }
+  .page-header { text-align: center; margin-bottom: 2rem; }
+  .page-header h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .page-header p { font-size: 14px; color: var(--color-text-secondary); }
+  .lesson-wrap { background: var(--color-bg); border-radius: var(--radius-lg); border: 0.5px solid var(--color-border); padding: 2rem; }
+  .progress-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); background: var(--color-bg-secondary); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .step-dot.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .step-dot.done { background: #EAF3DE; color: #3B6D11; border-color: #639922; }
+  .step-line { flex: 1; height: 0.5px; background: var(--color-border); }
+  .section { display: none; } .section.active { display: block; }
+  .section-header { font-size: 11px; font-weight: 500; color: #185FA5; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .card { background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .card-muted { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .vocab-chip { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: var(--radius-md); padding: 7px 10px; font-size: 13px; font-weight: 500; color: #0C447C; text-align: center; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .vocab-chip:hover { background: #B5D4F4; }
+  .vocab-chip.used { background: var(--color-bg-secondary); color: var(--color-text-secondary); border-color: var(--color-border); opacity: 0.5; }
+  .vocab-chip.selected { outline: 2px solid #185FA5; }
+  .gap-sentence { font-size: 15px; color: var(--color-text-primary); line-height: 2.2; margin-bottom: 10px; }
+  .gap { display: inline-block; min-width: 110px; height: 26px; border-bottom: 2px solid #378ADD; margin: 0 4px; text-align: center; font-weight: 500; color: #185FA5; font-size: 14px; cursor: pointer; vertical-align: bottom; padding: 0 4px; transition: all 0.15s; }
+  .gap.correct { border-bottom-color: #639922; color: #3B6D11; background: #EAF3DE; border-radius: 4px 4px 0 0; }
+  .gap.wrong { border-bottom-color: #E24B4A; color: #A32D2D; background: #FCEBEB; border-radius: 4px 4px 0 0; animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .feedback-msg { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; display: none; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+  .feedback-msg.err { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F7C1C1; }
+  .drill-q { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 14px; line-height: 1.6; }
+  .drill-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 500px) { .drill-options { grid-template-columns: 1fr; } }
+  .opt-btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { background: var(--color-bg-secondary); }
+  .opt-btn.correct { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+  .opt-btn:disabled { cursor: default; }
+  .progress-counter { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .nav-row { display: flex; gap: 8px; margin-top: 1.5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 9px 20px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--color-bg-secondary); }
+  .btn.primary { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .btn.primary:hover { background: #0C447C; }
+  .time-badge { font-size: 11px; color: var(--color-text-secondary); background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 5px 10px; }
+  .roleplay-box { border-left: 3px solid #378ADD; background: #E6F1FB; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .roleplay-label { font-size: 11px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .roleplay-text { font-size: 14px; color: #0C447C; line-height: 1.7; }
+  .int-box { border-left: 3px solid #639922; background: #EAF3DE; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .int-label { font-size: 11px; font-weight: 500; color: #3B6D11; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .int-text { font-size: 14px; color: #27500A; line-height: 1.7; }
+  .tip-box { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: #633806; margin-bottom: 14px; }
+  .score-circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #185FA5; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto 18px; }
+  .score-num { font-size: 24px; font-weight: 500; color: #185FA5; }
+  .score-lbl { font-size: 10px; color: var(--color-text-secondary); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: var(--radius-md); margin-right: 4px; margin-bottom: 4px; }
+  .tag-blue { background: #E6F1FB; color: #0C447C; border: 0.5px solid #B5D4F4; }
+  .tag-green { background: #EAF3DE; color: #27500A; border: 0.5px solid #C0DD97; }
+  .tag-amber { background: #FAEEDA; color: #633806; border: 0.5px solid #FAC775; }
+  .divider { height: 0.5px; background: var(--color-border); margin: 14px 0; }
+  .bullet-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .bullet-dot { margin-top: 6px; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .explain-box { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-top: 8px; display: none; }
+  .role-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .role-card-grid { grid-template-columns: 1fr; } }
+  .role-card { border-radius: var(--radius-lg); padding: 1rem 1.25rem; border: 0.5px solid; }
+  .role-card-a { background: #E6F1FB; border-color: #B5D4F4; }
+  .role-card-b { background: #EAF3DE; border-color: #C0DD97; }
+  .role-card-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .role-card-a .role-card-title { color: #185FA5; }
+  .role-card-b .role-card-title { color: #3B6D11; }
+  .role-card p { font-size: 13px; line-height: 1.7; }
+  .role-card-a p { color: #0C447C; }
+  .role-card-b p { color: #27500A; }
+  .error-box { background: #FCEBEB; border: 0.5px solid #F7C1C1; border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 10px; }
+  .error-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: #A32D2D; margin-bottom: 4px; }
+  .error-text { font-size: 13px; color: #501313; line-height: 1.6; }
+
+  body { background:
+      radial-gradient(circle at top, rgba(24,95,165,0.12), transparent 32%),
+      linear-gradient(180deg, #f4f1ea 0%, #ece8e0 100%); }
+  .outer { max-width: 900px; }
+  .page-header { margin-bottom: 1.25rem; }
+  .page-header h1 { font-size: 30px; font-weight: 650; letter-spacing: -0.02em; }
+  .page-header p { font-size: 15px; color: var(--color-text-secondary); }
+  .lesson-wrap { padding: 2rem; box-shadow: 0 24px 70px rgba(24,32,56,0.08); border: 1px solid rgba(0,0,0,0.07); }
+  .card, .card-muted, .role-card, .error-box, .tip-box, .roleplay-box, .int-box { box-shadow: 0 10px 24px rgba(17,24,39,0.04); }
+  .hero {
+    position: relative; overflow: hidden; min-height: 320px; border-radius: 22px; padding: 2rem;
+    margin-bottom: 1rem; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.2rem; align-items: end;
+    background:
+      linear-gradient(135deg, rgba(8,26,56,0.90), rgba(24,95,165,0.70)),
+      url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+  }
+  .hero::after{
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+    pointer-events:none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-kicker {
+    display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px;
+    background: rgba(255,255,255,0.14); color:#fff; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    border:1px solid rgba(255,255,255,0.18); margin-bottom: 14px;
+  }
+  .hero-title { color:#fff; font-size: 34px; line-height:1.08; font-weight: 700; letter-spacing:-0.03em; margin-bottom: 12px; max-width: 11ch; }
+  .hero-sub { color: rgba(255,255,255,0.84); font-size: 15px; line-height: 1.75; max-width: 58ch; }
+  .hero-panel {
+    justify-self:end; width:100%; max-width: 290px; background: rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.18); border-radius: 18px; padding: 1rem 1rem 0.95rem; backdrop-filter: blur(8px);
+  }
+  .hero-panel-label { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color: rgba(255,255,255,0.7); margin-bottom:8px; }
+  .hero-panel-title { color:#fff; font-size:18px; font-weight:600; margin-bottom:8px; }
+  .hero-panel p { color: rgba(255,255,255,0.82); font-size:13px; line-height:1.6; }
+  .quick-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin: 0 0 14px; }
+  .quick-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(246,245,242,0.95));
+    border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 14px 14px 12px;
+  }
+  .quick-card strong { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#185FA5; margin-bottom:6px; }
+  .quick-card span { font-size:14px; color: var(--color-text-primary); line-height:1.55; display:block; }
+  .card, .card-muted, .role-card, .tip-box, .error-box { border-radius: 16px; }
+  .btn, .time-badge, .tag, .step-dot, .vocab-chip { border-radius: 999px; }
+  .progress-bar { margin-bottom: 1.25rem; }
+  .section-title { font-size: 24px; font-weight: 650; letter-spacing: -0.02em; }
+  .section-sub { font-size: 14px; }
+  @media (max-width: 760px){
+    .hero { grid-template-columns: 1fr; min-height: auto; padding: 1.4rem; }
+    .hero-title { font-size: 30px; max-width: none; }
+    .hero-panel { justify-self:stretch; max-width:none; }
+    .quick-grid { grid-template-columns: 1fr; }
+    .lesson-wrap { padding: 1.1rem; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background:
+      radial-gradient(circle at top, rgba(24,95,165,0.22), transparent 30%),
+      linear-gradient(180deg, #171716 0%, #20201f 100%); }
+    .quick-card { background: linear-gradient(180deg, rgba(37,37,35,0.98), rgba(28,28,26,0.98)); border-color: rgba(255,255,255,0.08); }
+  }
+
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Asking for Technical Support</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <div class="section active" id="sec0">
+      <div class="hero">
+        <div>
+          <div class="hero-kicker">B1 interactive lesson</div>
+          <div class="hero-title">Asking for Technical Support</div>
+          <div class="hero-sub">Build the language learners need to describe tech problems clearly, ask for help politely, and follow troubleshooting steps with confidence in a real support-call scenario.</div>
+        </div>
+        <div class="hero-panel">
+          <div class="hero-panel-label">First scenario</div>
+          <div class="hero-panel-title">CloudDesk IT Helpdesk</div>
+          <p>An urgent login failure, error code E-403, a frozen screen, and a client presentation in two hours. Learners practise calm, precise problem-solving language from both sides of the call.</p>
+        </div>
+      </div>
+
+      <div class="quick-grid">
+        <div class="quick-card"><strong>Focus</strong><span>Describe problems with more precision than “it doesn’t work”.</span></div>
+        <div class="quick-card"><strong>Context</strong><span>Phone-based IT support with clear diagnostic questions and guided steps.</span></div>
+        <div class="quick-card"><strong>Outcome</strong><span>Students handle an urgent support call naturally and professionally.</span></div>
+      </div>
+
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Technology problems in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="card-muted">
+        <p style="font-size:14px;font-weight:500;margin-bottom:10px">Discuss with your partner:</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. Have you ever had to contact technical support? What happened?</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. What technology problems do you find most frustrating? Why?</p>
+        <p style="font-size:14px;line-height:1.8">3. What information do you think a support agent needs to help you?</p>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Elicit vocabulary students already know: crash, freeze, reboot, error message, password. Ask: what is the difference between "it doesn't work" and "it keeps freezing when I open the app"? Precision of description is key.</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's scenario — a support call to <strong>CloudDesk IT Helpdesk</strong>:</p>
+        <div class="error-box">
+          <div class="error-label">The problem</div>
+          <div class="error-text">An employee at Westbridge Ltd cannot log in to the company's project management software. She sees error code E-403 and the screen freezes. She has an important client presentation in two hours and needs urgent help.</div>
+        </div>
+        <div style="margin-top:6px">
+          <span class="tag tag-blue">Phone call</span>
+          <span class="tag tag-green">IT helpdesk</span>
+          <span class="tag tag-amber">Urgent issue</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary &#x2192;</button>
+      </div>
+    </div>
+
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key technical support vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word from the box, then click a blank to fill it. Hover over a word to see its definition.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Useful phrases for technical support</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Technical support question forms drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">The helpdesk call</div>
+      <div class="section-sub">12 minutes · Pair work</div>
+      <div class="tip-box"><strong>How to use:</strong> Student A = User with the problem. Student B = IT Support Agent. The user must describe the problem clearly; the agent must ask good diagnostic questions and guide the user step by step.</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">&#x2190; back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">&#x2190; back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again &#x21BA;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0,selectedWord=null,gapAnswers={},drillScore=0,drillIndex=0,drillDone=false;
+
+const WORDS=[
+  {word:'reboot',      def:'to restart a computer or device'},
+  {word:'error code',  def:'a number or message that identifies a specific fault'},
+  {word:'crash',       def:'when a program or system stops working suddenly'},
+  {word:'troubleshoot',def:'to find and fix problems in a system'},
+  {word:'log in',      def:'to enter a username and password to access a system'},
+  {word:'update',      def:'a new version of software that fixes bugs or adds features'},
+  {word:'bandwidth',   def:'the amount of data that can be transferred over a network'},
+  {word:'remote access',def:'controlling a computer from a different location'},
+];
+
+const GAPS=[
+  {id:'g0',before:'Try to ',blank:'reboot',after:' your computer first and see if the problem goes away.'},
+  {id:'g1',before:'Can you tell me what ',blank:'error code',after:' is appearing on your screen?'},
+  {id:'g2',before:'The application seems to ',blank:'crash',after:' every time I try to open the file.'},
+  {id:'g3',before:'Our team will ',blank:'troubleshoot',after:' the network issues and call you back.'},
+  {id:'g4',before:'I cannot ',blank:'log in',after:' to the system — it keeps rejecting my password.'},
+  {id:'g5',before:'Please install the latest ',blank:'update',after:' and the bug should be fixed.'},
+  {id:'g6',before:'The video call keeps cutting out — I think the problem is my ',blank:'bandwidth',after:'.'},
+  {id:'g7',before:'With your permission, I can use ',blank:'remote access',after:' to fix the problem from here.'},
+];
+
+const FUNC_CATS=[
+  {label:'Describing the problem',phrases:[
+    'My computer keeps freezing when I try to open the app.',
+    'I\'m getting an error message that says E-403.',
+    'The screen goes blank every time I log in.',
+    'It suddenly stopped working about an hour ago.',
+  ]},
+  {label:'Asking diagnostic questions (support)',phrases:[
+    'Can you tell me what operating system you\'re using?',
+    'When exactly does the problem occur?',
+    'Have you tried restarting the device?',
+    'Could you read out the error code for me?',
+  ]},
+  {label:'Following instructions',phrases:[
+    'OK, I\'ve done that. What should I do next?',
+    'I\'m not sure how to do that. Could you explain step by step?',
+    'I\'ve tried that but the problem is still there.',
+    'Right, I can see that now on my screen.',
+  ]},
+  {label:'Asking for clarification',phrases:[
+    'Sorry, could you say that again more slowly?',
+    'I\'m not very technical. Could you explain what that means?',
+    'Do you mean I should click on the Start menu?',
+    'Could you spell that out for me, please?',
+  ]},
+  {label:'Closing the call',phrases:[
+    'Thank you for your help. I think that\'s fixed it.',
+    'How long do you think it will take to resolve?',
+    'Could I have a reference number for this call?',
+    'I\'ll call back if the problem continues.',
+  ]},
+];
+
+const DRILL_QS=[
+  {q:'You want to describe an ongoing problem. Which sentence is grammatically correct?',
+   opts:['My computer is freeze.','My computer keeps freezing when I open the file.','My computer keep to freeze.','My computer is keeping freeze.'],
+   ans:1,
+   explain:'"Keeps + verb-ing" is the correct structure for describing a repeated or ongoing action.'},
+  {q:'The support agent wants to ask about the timing of the problem. Which indirect question is correct?',
+   opts:['When it happened?','Could you tell me when the problem started?','Could you tell me when did the problem start?','When has the problem started?'],
+   ans:1,
+   explain:'"Could you tell me + when + statement word order" is the correct indirect question form.'},
+  {q:'You need to ask the agent to explain something more simply. Which is the most polite request?',
+   opts:['Explain again.','Say it simpler.','I\'m not very technical. Could you explain what that means?','What does it mean? Say again.'],
+   ans:2,
+   explain:'"I\'m not very technical. Could you explain...?" is polite, gives a reason, and uses a modal request.'},
+  {q:'The agent wants to ask for permission to access the computer remotely. Which form is best?',
+   opts:['I need to access your computer.','Would it be OK if I used remote access to look at the issue?','Can I remote access?','I will use remote access now.'],
+   ans:1,
+   explain:'"Would it be OK if I + past simple?" is a polite conditional permission request.'},
+  {q:'You have followed the steps but the problem is still there. Which sentence is correct?',
+   opts:['I did that but problem still.','I\'ve tried that but the problem is still there.','I tried that and still a problem is.','The problem still there after I did that.'],
+   ans:1,
+   explain:'"I\'ve tried that but..." uses the present perfect for a recent action and gives clear context.'},
+  {q:'The agent asks: "Have you _____ the software recently?" Which word fits?',
+   opts:['renewed','updated','improved','refreshed'],
+   ans:1,
+   explain:'"Updated" is the standard technical verb for installing a new version of software.'},
+];
+
+const ROLEPLAY=[
+  {speaker:'Agent', text:'Good afternoon, CloudDesk IT Helpdesk. My name is James. How can I help you today?'},
+  {speaker:'User',  text:'[Greet the agent. Explain that you have an urgent problem — you cannot log in to the project management system and you have a presentation in two hours.]'},
+  {speaker:'Agent', text:'I understand, that sounds urgent. Could you tell me your name and employee ID number so I can pull up your account?'},
+  {speaker:'User',  text:'[Give your name and ID number. Also tell the agent what error message you are seeing: error code E-403.]'},
+  {speaker:'Agent', text:'Thank you. E-403 usually means an authentication issue. Can you tell me when this problem started, and have you changed your password recently?'},
+  {speaker:'User',  text:'[Say the problem started this morning. You did not change your password. Mention that the screen also freezes after the error appears.]'},
+  {speaker:'Agent', text:'OK. First, let\'s try something simple. Could you close the browser completely, clear the cache, and then try to log in again?'},
+  {speaker:'User',  text:'[Say you are not sure how to clear the cache. Ask the agent to explain step by step. Follow the instructions. Then say it is still not working.]'},
+  {speaker:'Agent', text:'In that case, I\'d like to try remote access. Would it be OK if I connected to your computer to look at the settings directly?'},
+  {speaker:'User',  text:'[Agree to remote access. While waiting, ask how long this will take to fix. Mention that you really need it working before 3pm.]'},
+  {speaker:'Agent', text:'I can see the issue — your account was locked after too many failed login attempts. I\'m resetting it now. Please try logging in again with your usual password.'},
+  {speaker:'User',  text:'[Try to log in. Say it is working now. Thank the agent. Ask for a reference number for the call in case the problem comes back.]'},
+  {speaker:'Agent', text:'Your reference number is CLD-7743. Is there anything else I can help you with today?'},
+  {speaker:'User',  text:'[Say no thank you and close the call politely.]'},
+];
+
+function goTo(n){
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps();if(n===2)buildFunctional();if(n===3&&!drillDone)buildDrill();if(n===4)buildRoleplay();if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps(){
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word;c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w){
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w;const chip=document.getElementById('chip_'+w);if(chip)chip.classList.add('selected');
+}
+function fillGap(gid){
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const c=document.getElementById('chip_'+cur);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const chip=document.getElementById('chip_'+selectedWord);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps(){
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional(){
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--color-text-primary);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">When describing a technical problem, be as specific as possible: say WHAT happens, WHEN it happens, and WHAT you see on screen. Vague descriptions like "it doesn't work" make it very hard for support staff to help you.</div>`;
+}
+function buildDrill(){drillIndex=0;drillScore=0;renderDrillQ();}
+function renderDrillQ(){
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--color-text-primary)">${drillScore===DRILL_QS.length?'Perfect score!':drillScore>=4?'Great job!':'Good effort! Review and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question &#x2192;</button></div>`;
+}
+function answerDrill(chosen){
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay(){
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — User (Westbridge Ltd)</div><p>You cannot log in to the project management system. Error code E-403 appears and the screen freezes. You have a client presentation at 3pm. You are not very technical.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — IT Support Agent (CloudDesk)</div><p>You handle the call professionally. Ask diagnostic questions, guide the user step by step, and use remote access to fix the issue (locked account after failed logins). Reference number: CLD-7743.</p></div></div>`;
+  ROLEPLAY.forEach(line=>{
+    if(line.speaker==='Agent'){
+      wrap.innerHTML+=`<div class="int-box"><div class="int-label">Support Agent — Student B</div><div class="int-text">${line.text}</div></div>`;
+    } else {
+      wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">User — Student A</div><div class="roleplay-text">${line.text}</div></div>`;
+    }
+  });
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap roles — new problem!</p><p style="font-size:13px;color:var(--color-text-secondary)">Student B is now a user whose laptop won't connect to the company Wi-Fi. Student A is the support agent. The fix: update the network driver. Guide the user through it step by step.</p></div></div>`;
+}
+function buildSummary(){
+  const items=['8 key technical vocabulary words','Functional phrases for 5 support call stages: describing problems, diagnostic questions, following instructions, asking for clarification, and closing','6 grammar exercises (keeps + -ing, indirect questions, modal requests, present perfect)','A full IT helpdesk role play with a technical problem to diagnose and fix'];
+  const hw=['Write a short email (80-100 words) to your IT department describing a technical problem you have. Include: what the problem is, when it started, and what you have already tried.','Write 5 questions a support agent might ask a user who says: "My printer is not working."','Practice describing 3 different tech problems using the structure: what + when + what you see.'];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Asking for Technical Support</p><p style="font-size:13px;color:var(--color-text-secondary)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--color-text-primary)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work! In technical support conversations, patience and precision are everything. The more clearly you describe the problem, the faster it gets solved.</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>
