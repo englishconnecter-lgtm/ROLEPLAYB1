@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opinions, Agreeing &amp; Disagreeing — B1 Lesson</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --color-bg: #ffffff; --color-bg-secondary: #f6f5f2; --color-bg-tertiary: #f0ede8;
+    --color-text-primary: #1a1a18; --color-text-secondary: #6b6a66;
+    --color-border: rgba(0,0,0,0.12); --color-border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1c1c1a; --color-bg-secondary: #252523; --color-bg-tertiary: #2e2e2b;
+      --color-text-primary: #f0ede8; --color-text-secondary: #9a9891;
+      --color-border: rgba(255,255,255,0.12); --color-border-secondary: rgba(255,255,255,0.22);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--color-bg-tertiary); color: var(--color-text-primary); min-height: 100vh; padding: 2rem 1rem; }
+  .outer { max-width: 720px; margin: 0 auto; }
+  .page-header { text-align: center; margin-bottom: 2rem; }
+  .page-header h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .page-header p { font-size: 14px; color: var(--color-text-secondary); }
+  .lesson-wrap { background: var(--color-bg); border-radius: var(--radius-lg); border: 0.5px solid var(--color-border); padding: 2rem; }
+  .progress-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); background: var(--color-bg-secondary); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .step-dot.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .step-dot.done { background: #EAF3DE; color: #3B6D11; border-color: #639922; }
+  .step-line { flex: 1; height: 0.5px; background: var(--color-border); }
+  .section { display: none; } .section.active { display: block; }
+  .section-header { font-size: 11px; font-weight: 500; color: #185FA5; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .card { background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .card-muted { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .vocab-chip { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: var(--radius-md); padding: 7px 10px; font-size: 13px; font-weight: 500; color: #0C447C; text-align: center; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .vocab-chip:hover { background: #B5D4F4; }
+  .vocab-chip.used { background: var(--color-bg-secondary); color: var(--color-text-secondary); border-color: var(--color-border); opacity: 0.5; }
+  .vocab-chip.selected { outline: 2px solid #185FA5; }
+  .gap-sentence { font-size: 15px; color: var(--color-text-primary); line-height: 2.2; margin-bottom: 10px; }
+  .gap { display: inline-block; min-width: 110px; height: 26px; border-bottom: 2px solid #378ADD; margin: 0 4px; text-align: center; font-weight: 500; color: #185FA5; font-size: 14px; cursor: pointer; vertical-align: bottom; padding: 0 4px; transition: all 0.15s; }
+  .gap.correct { border-bottom-color: #639922; color: #3B6D11; background: #EAF3DE; border-radius: 4px 4px 0 0; }
+  .gap.wrong { border-bottom-color: #E24B4A; color: #A32D2D; background: #FCEBEB; border-radius: 4px 4px 0 0; animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .feedback-msg { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; display: none; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+  .feedback-msg.err { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F7C1C1; }
+  .drill-q { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 14px; line-height: 1.6; }
+  .drill-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 500px) { .drill-options { grid-template-columns: 1fr; } }
+  .opt-btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { background: var(--color-bg-secondary); }
+  .opt-btn.correct { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+  .opt-btn:disabled { cursor: default; }
+  .progress-counter { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .nav-row { display: flex; gap: 8px; margin-top: 1.5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn { background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); padding: 9px 20px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--color-bg-secondary); }
+  .btn.primary { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .btn.primary:hover { background: #0C447C; }
+  .time-badge { font-size: 11px; color: var(--color-text-secondary); background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 5px 10px; }
+  .roleplay-box { border-left: 3px solid #378ADD; background: #E6F1FB; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .roleplay-label { font-size: 11px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .roleplay-text { font-size: 14px; color: #0C447C; line-height: 1.7; }
+  .int-box { border-left: 3px solid #639922; background: #EAF3DE; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 10px; }
+  .int-label { font-size: 11px; font-weight: 500; color: #3B6D11; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .int-text { font-size: 14px; color: #27500A; line-height: 1.7; }
+  .tip-box { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: #633806; margin-bottom: 14px; }
+  .score-circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #185FA5; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto 18px; }
+  .score-num { font-size: 24px; font-weight: 500; color: #185FA5; }
+  .score-lbl { font-size: 10px; color: var(--color-text-secondary); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: var(--radius-md); margin-right: 4px; margin-bottom: 4px; }
+  .tag-blue { background: #E6F1FB; color: #0C447C; border: 0.5px solid #B5D4F4; }
+  .tag-green { background: #EAF3DE; color: #27500A; border: 0.5px solid #C0DD97; }
+  .tag-amber { background: #FAEEDA; color: #633806; border: 0.5px solid #FAC775; }
+  .tag-purple { background: #EEEDFE; color: #3C3489; border: 0.5px solid #AFA9EC; }
+  .divider { height: 0.5px; background: var(--color-border); margin: 14px 0; }
+  .bullet-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .bullet-dot { margin-top: 6px; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .explain-box { font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); margin-top: 8px; display: none; }
+  .role-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .role-card-grid { grid-template-columns: 1fr; } }
+  .role-card { border-radius: var(--radius-lg); padding: 1rem 1.25rem; border: 0.5px solid; }
+  .role-card-a { background: #E6F1FB; border-color: #B5D4F4; }
+  .role-card-b { background: #EAF3DE; border-color: #C0DD97; }
+  .role-card-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .role-card-a .role-card-title { color: #185FA5; }
+  .role-card-b .role-card-title { color: #3B6D11; }
+  .role-card p { font-size: 13px; line-height: 1.7; }
+  .role-card-a p { color: #0C447C; }
+  .role-card-b p { color: #27500A; }
+  .opinion-topic { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 8px; font-size: 14px; color: var(--color-text-primary); line-height: 1.6; }
+  .opinion-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .scale-bar { display: flex; align-items: center; gap: 0; margin: 14px 0 6px; border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .scale-item { flex: 1; text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 500; line-height: 1.4; }
+  .scale-agree { background: #EAF3DE; color: #27500A; }
+  .scale-partial { background: #E6F1FB; color: #0C447C; }
+  .scale-disagree { background: #FCEBEB; color: #A32D2D; }
+
+  :root {
+    --accent: #185FA5;
+    --accent-dark: #0C447C;
+    --accent-soft: #E6F1FB;
+    --success-soft: #EAF3DE;
+    --warm-soft: #FAEEDA;
+    --shadow-soft: 0 18px 45px rgba(12, 68, 124, 0.10);
+    --shadow-card: 0 10px 26px rgba(0, 0, 0, 0.06);
+  }
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(55,138,221,0.10), transparent 26%),
+      linear-gradient(180deg, #eef4fb 0%, var(--color-bg-tertiary) 40%, #ece8e1 100%);
+  }
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  .page-header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .page-header p {
+    font-size: 15px;
+  }
+  .lesson-wrap {
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(24,95,165,0.08);
+    padding: 2.2rem;
+  }
+  .card, .card-muted, .role-card, .tip-box, .roleplay-box, .int-box, .opinion-topic {
+    box-shadow: var(--shadow-card);
+  }
+  .section-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px;
+    margin-bottom: 1.75rem;
+  }
+  .hero-banner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    min-height: 280px;
+    margin-bottom: 18px;
+    background:
+      linear-gradient(105deg, rgba(12,68,124,0.90) 0%, rgba(24,95,165,0.74) 38%, rgba(24,95,165,0.24) 64%),
+      url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    box-shadow: var(--shadow-soft);
+  }
+  .hero-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 470px;
+    padding: 28px;
+    color: #fff;
+  }
+  .hero-kicker {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.18);
+    margin-bottom: 14px;
+    backdrop-filter: blur(6px);
+  }
+  .hero-content h2 {
+    font-size: 30px;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .hero-content p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.92);
+  }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .hero-pill {
+    font-size: 12px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    backdrop-filter: blur(6px);
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  .highlight-panel {
+    border-radius: 18px;
+    padding: 1.2rem 1.25rem;
+    background: linear-gradient(180deg, #f8fbff 0%, #eef5fd 100%);
+    border: 1px solid #d8e7f8;
+  }
+  .highlight-panel h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--accent-dark);
+  }
+  .highlight-panel p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+  .highlight-panel ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .highlight-panel li {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+  }
+  .progress-bar {
+    margin-bottom: 2.2rem;
+  }
+  .step-dot {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+  }
+  .btn.primary {
+    box-shadow: 0 10px 24px rgba(24,95,165,0.22);
+  }
+  @media (max-width: 640px) {
+    .lesson-wrap { padding: 1.3rem; }
+    .page-header h1 { font-size: 24px; }
+    .section-title { font-size: 22px; }
+    .hero-banner { min-height: 240px; }
+    .hero-content { padding: 20px; }
+    .hero-content h2 { font-size: 25px; }
+    .intro-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="page-header">
+    <h1>Opinions, Agreeing &amp; Disagreeing</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+  <div class="lesson-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="step-dot active" onclick="goTo(0)">1</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(1)">2</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(2)">3</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(3)">4</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(4)">5</div><div class="step-line"></div>
+      <div class="step-dot" onclick="goTo(5)">6</div>
+    </div>
+
+    <div class="section active" id="sec0">
+      <div class="section-header">Stage 1 — Warm-up</div>
+      <div class="section-title">Sharing opinions in English</div>
+      <div class="section-sub">5 minutes · Discussion &amp; context setting</div>
+      <div class="hero-banner">
+        <div class="hero-content">
+          <div class="hero-kicker">Stage 1 · Warm-up</div>
+          <h2>Step into a real public debate</h2>
+          <p>Explore how English speakers share strong opinions, soften disagreement, and respond respectfully in a formal town council meeting.</p>
+          <div class="hero-meta">
+            <span class="hero-pill">B1 discussion skills</span>
+            <span class="hero-pill">Formal speaking</span>
+            <span class="hero-pill">Role-play scenario</span>
+          </div>
+        </div>
+      </div>
+      <div class="intro-grid">
+        <div class="card-muted">
+          <p style="font-size:14px;font-weight:600;margin-bottom:10px">Discuss with your partner:</p>
+          <p style="font-size:14px;line-height:1.8;margin-bottom:6px">1. Is it easy to disagree with someone in English? What makes it difficult?</p>
+          <p style="font-size:14px;line-height:1.8;margin-bottom:6px">2. What's the difference between saying "You're wrong" and "I'm not sure I agree"? Why does it matter?</p>
+          <p style="font-size:14px;line-height:1.8">3. In your culture, is it normal to disagree openly? How is this different in English-speaking countries?</p>
+        </div>
+        <div class="highlight-panel">
+          <h3>Lesson focus</h3>
+          <ul>
+            <li>express opinions clearly</li>
+            <li>agree and disagree politely</li>
+            <li>use formal debate language</li>
+            <li>move across the full opinion scale</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><strong>Teacher note:</strong> Highlight the spectrum from strong agreement to strong disagreement. English speakers often soften disagreement with hedging language. Write on the board: "Strongly agree → Partially agree → Not sure → Partially disagree → Strongly disagree".</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's scenario — a planning meeting at <strong>Horizon City Council</strong>:</p>
+        <p style="font-size:14px;color:var(--color-text-primary);margin-bottom:10px;line-height:1.7">The council is deciding whether to build a new shopping centre in the town centre. Two council members have very different views. They must discuss the proposal and share their opinions respectfully in a public meeting.</p>
+        <div class="scale-bar">
+          <div class="scale-item scale-agree">Strongly agree</div>
+          <div class="scale-item scale-partial">Partially agree</div>
+          <div class="scale-item scale-partial" style="background:var(--color-bg-secondary);color:var(--color-text-secondary)">Not sure</div>
+          <div class="scale-item scale-partial">Partially disagree</div>
+          <div class="scale-item scale-disagree">Strongly disagree</div>
+        </div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin-top:4px">You'll use language from across this whole spectrum during the role play.</p>
+        <div style="margin-top:10px">
+          <span class="tag tag-blue">Debate format</span>
+          <span class="tag tag-green">Formal register</span>
+          <span class="tag tag-purple">Genuine disagreement</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <span class="time-badge">5 min</span>
+        <button class="btn primary" onclick="goTo(1)">Next: vocabulary →</button>
+      </div>
+    </div>
+
+    <div class="section" id="sec1">
+      <div class="section-header">Stage 2 — Vocabulary</div>
+      <div class="section-title">Key opinion vocabulary</div>
+      <div class="section-sub">10 minutes · Gap-fill exercise</div>
+      <div class="tip-box">Click a word from the box, then click a blank to fill it. Hover over a word to see its definition.</div>
+      <div class="vocab-grid" id="wordBank"></div>
+      <div id="gapFeedback" class="feedback-msg"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(0)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn" onclick="checkGaps()">Check answers</button>
+          <button class="btn primary" onclick="goTo(2)">Next: functional language →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec2">
+      <div class="section-header">Stage 3 — Functional language</div>
+      <div class="section-title">Phrases for opinions, agreeing &amp; disagreeing</div>
+      <div class="section-sub">8 minutes · Study &amp; practise</div>
+      <div id="funcContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(1)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">8 min</span>
+          <button class="btn primary" onclick="goTo(3)">Next: question forms →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec3">
+      <div class="section-header">Stage 4 — Question forms</div>
+      <div class="section-title">Opinion &amp; discussion question forms drill</div>
+      <div class="section-sub">10 minutes · Multiple choice quiz</div>
+      <div id="drillWrap"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(2)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">10 min</span>
+          <button class="btn primary" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec4">
+      <div class="section-header">Stage 5 — Role play</div>
+      <div class="section-title">The shopping centre debate</div>
+      <div class="section-sub">12 minutes · Pair work</div>
+      <div class="tip-box"><strong>How to use:</strong> Student A supports the shopping centre. Student B opposes it. Each person must ask for the other's opinion, give their own views, and agree or disagree using phrases from Stage 3. Try to use language from across the full scale.</div>
+      <div id="roleplayContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(3)">← back</button>
+        <div class="nav-right">
+          <span class="time-badge">12 min</span>
+          <button class="btn primary" onclick="goTo(5)">Finish lesson →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec5">
+      <div class="section-header">Stage 6 — Summary</div>
+      <div class="section-title">Lesson complete!</div>
+      <div class="section-sub">5 minutes · Review &amp; feedback</div>
+      <div id="summaryContent"></div>
+      <div class="nav-row">
+        <button class="btn" onclick="goTo(4)">← back</button>
+        <button class="btn primary" onclick="restartLesson()">Start again ↺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection=0,selectedWord=null,gapAnswers={},drillScore=0,drillIndex=0,drillDone=false;
+
+const WORDS=[
+  {word:'perspective', def:'a particular way of thinking about something'},
+  {word:'valid',       def:'having a sound basis; logically acceptable'},
+  {word:'concern',     def:'a worry or issue about something'},
+  {word:'convincing',  def:'able to make someone believe something is true'},
+  {word:'oppose',      def:'to be against something; to disagree with a plan'},
+  {word:'neutral',     def:'not taking sides; not expressing strong opinions'},
+  {word:'viewpoint',   def:'a position or opinion from which something is considered'},
+  {word:'evidence',    def:'facts or information that support a claim'},
+];
+
+const GAPS=[
+  {id:'g0',before:'From my ',blank:'perspective',after:', building the shopping centre will create hundreds of jobs.'},
+  {id:'g1',before:'That is a ',blank:'valid',after:' point — I agree that traffic could be a problem.'},
+  {id:'g2',before:'My main ',blank:'concern',after:' is the impact on small local shops in the town centre.'},
+  {id:'g3',before:"I don't find that argument ",blank:'convincing',after:' — the data shows footfall is already declining.'},
+  {id:'g4',before:'Many residents strongly ',blank:'oppose',after:' the development because of noise and construction disruption.'},
+  {id:'g5',before:'As the chairperson, I try to remain ',blank:'neutral',after:' and consider all sides of the argument.'},
+  {id:'g6',before:'I respect your ',blank:'viewpoint',after:', but I see the situation quite differently.'},
+  {id:'g7',before:'Do you have any ',blank:'evidence',after:' to support that claim? What does the data say?'},
+];
+
+const FUNC_CATS=[
+  {label:'Asking for someone\'s opinion',phrases:[
+    "What's your view on this?",
+    "How do you feel about the proposal?",
+    "What do you think about...?",
+    "I'd be interested to hear your perspective on...",
+  ]},
+  {label:'Giving your opinion',phrases:[
+    "In my opinion, the main benefit is...",
+    "From my perspective, I think...",
+    "I strongly believe that...",
+    "As far as I'm concerned...",
+  ]},
+  {label:'Agreeing',phrases:[
+    "I completely agree with you.",
+    "That's a very valid point.",
+    "Absolutely — I think you're right.",
+    "I couldn't agree more.",
+  ]},
+  {label:'Partially agreeing',phrases:[
+    "I see what you mean, but...",
+    "You have a point, although I think...",
+    "I agree up to a point, however...",
+    "That's true to some extent, but...",
+  ]},
+  {label:'Disagreeing politely',phrases:[
+    "I'm not sure I agree with that.",
+    "I take your point, but I see it differently.",
+    "I'm afraid I can't agree with that.",
+    "With respect, I think that's overlooking...",
+  ]},
+];
+
+const DRILL_QS=[
+  {q:'You want to ask for someone\'s opinion politely. Which question is most natural?',
+   opts:["What is your opinion?","What do you think about the proposal?","Tell me your opinion.","Opinion — what is yours?"],
+   ans:1,explain:'"What do you think about...?" is the most natural, open question for inviting someone\'s view in a discussion.'},
+  {q:'You want to disagree politely without offending. Which response is best?',
+   opts:["That\'s completely wrong.","I\'m not sure I agree — I think there are other factors to consider.","No. I disagree.","Wrong. I see it differently."],
+   ans:1,explain:'"I\'m not sure I agree..." is a hedged disagreement — it sounds respectful and opens dialogue rather than closing it down.'},
+  {q:'You want to partially agree. Which sentence is correct?',
+   opts:["Yes and no.","I agree up to a point, however the cost implications are significant.","I agree but not fully.","Partially agreeing with you on this."],
+   ans:1,explain:'"I agree up to a point, however..." acknowledges the other view while introducing a reservation — a key B1 discussion skill.'},
+  {q:'You want to give your opinion formally. Which structure is most appropriate?',
+   opts:["I think this.","I opinion that this is wrong.","As far as I\'m concerned, the risks outweigh the benefits.","My opinion is this is wrong."],
+   ans:2,explain:'"As far as I\'m concerned..." is a formal, idiomatic way to introduce a personal opinion in a discussion or debate.'},
+  {q:'Which question correctly asks for evidence in an indirect way?',
+   opts:["Prove it.","Where is your evidence?","Could you tell me what evidence supports that view?","Evidence — do you have it?"],
+   ans:2,explain:'"Could you tell me...?" is an indirect question form — more polite than a direct challenge in a formal discussion.'},
+  {q:'You want to say you strongly agree. Which phrase is correct?',
+   opts:["I agree much.","I couldn\'t agree more — that\'s exactly my view.","I agree very strongly.","Yes I agree fully with this point."],
+   ans:1,explain:'"I couldn\'t agree more" is a fixed idiomatic expression meaning strong agreement — common in natural spoken English.'},
+];
+
+const ROLEPLAY=[
+  {speaker:'A',text:"[Open the discussion. Welcome everyone. Introduce the topic: the council is considering building a new shopping centre. Ask Student B for their initial view. Use: 'I'd be interested to hear your perspective on this proposal.']"},
+  {speaker:'B',text:"Thank you. I have to say I have serious concerns about this development. My main worry is the effect it will have on small, independent shops in the town centre."},
+  {speaker:'A',text:"[Acknowledge their concern. Partially agree — yes, some small shops may struggle. But give your opinion: the benefits outweigh the risks. Use: 'I see what you mean, but...']"},
+  {speaker:'B',text:"I take your point about jobs. But where is the evidence that these will be long-term, well-paid jobs? I've seen studies suggesting most retail jobs are part-time and low wage."},
+  {speaker:'A',text:"[Respond to the evidence point. You believe the data shows economic growth in similar projects elsewhere. Use: 'From my perspective...' or 'As far as I'm concerned...' Invite their view on the traffic issue.]"},
+  {speaker:'B',text:"Traffic is another major concern for me. The town centre roads are already at capacity. How do you feel about the impact of thousands more visitors every week?"},
+  {speaker:'A',text:"[This is a valid point — agree partially. Say the developers have committed to a new park-and-ride scheme. Use: 'That's a valid point, although...' Ask if that changes their view at all.]"},
+  {speaker:'B',text:"I'm afraid it doesn't change my view significantly. With respect, I think a park-and-ride is a sticking plaster, not a real solution."},
+  {speaker:'A',text:"[Disagree politely but firmly. State that you believe the long-term economic benefits are clear and ask: what alternative does Student B propose? Use: 'I take your point, but I see it differently...']"},
+  {speaker:'B',text:"My alternative would be to invest in improving the existing high street — better transport links, lower business rates for independent traders, and a community market."},
+  {speaker:'A',text:"[React positively to this idea. Say it is a constructive suggestion and you agree it has merit. Ask what their strongest argument against the shopping centre is, overall. Use: 'I couldn't agree more that... however...']"},
+  {speaker:'B',text:"My strongest argument is community identity. This town has a unique character, and I believe a large shopping centre would destroy that. I'd like to know — do you share that concern at all?"},
+  {speaker:'A',text:"[Give an honest, balanced final response. Acknowledge the community identity point — it is valid. Disagree that the development necessarily destroys character. Try to find common ground. Use any agreeing/disagreeing phrase from Stage 3.]"},
+];
+
+function goTo(n){
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  currentSection=n;
+  if(n===1)buildGaps();if(n===2)buildFunctional();if(n===3&&!drillDone)buildDrill();if(n===4)buildRoleplay();if(n===5)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildGaps(){
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vocab-chip';c.textContent=w.word;c.id='chip_'+w.word;c.title=w.def;c.onclick=()=>selectWord(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gap-sentence';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selectWord(w){
+  document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedWord===w){selectedWord=null;return;}
+  selectedWord=w;const chip=document.getElementById('chip_'+w);if(chip)chip.classList.add('selected');
+}
+function fillGap(gid){
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const c=document.getElementById('chip_'+cur);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete gapAnswers[gid];return;}
+  if(!selectedWord)return;
+  const chip=document.getElementById('chip_'+selectedWord);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=selectedWord;gapAnswers[gid]=selectedWord;if(chip)chip.classList.add('used');
+  selectedWord=null;document.querySelectorAll('.vocab-chip').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps(){
+  let correct=0;
+  GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');correct++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='feedback-msg show '+(correct===GAPS.length?'ok':'err');
+  fb.textContent=correct===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${correct} of ${GAPS.length} correct. Check the highlighted answers and try again.`;
+}
+function buildFunctional(){
+  const wrap=document.getElementById('funcContent');wrap.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let html=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{html+=`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD"></span><span style="font-size:14px;color:var(--color-text-primary);line-height:1.6">${ph}</span></div>`;});html+='</div>';wrap.innerHTML+=html;});
+  wrap.innerHTML+=`<div class="tip-box">The key to polite disagreement in English is to <strong>acknowledge</strong> the other person's view before you challenge it. Phrases like "I see what you mean, but..." and "You have a point, although..." do this naturally.</div>`;
+}
+function buildDrill(){drillIndex=0;drillScore=0;renderDrillQ();}
+function renderDrillQ(){
+  const wrap=document.getElementById('drillWrap');
+  if(drillIndex>=DRILL_QS.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';wrap.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">Quiz complete!</p><div class="score-circle"><span class="score-num">${drillScore}/${DRILL_QS.length}</span><span class="score-lbl">score</span></div><p style="font-size:15px;font-weight:500;color:var(--color-text-primary)">${drillScore===DRILL_QS.length?'Perfect score — well done!':drillScore>=4?'Great job! Review any missed questions.':'Good effort! Review the grammar notes and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[drillIndex];
+  wrap.innerHTML=`<p class="progress-counter">Question ${drillIndex+1} of ${DRILL_QS.length}</p><div class="card"><p class="drill-q">${q.q}</p><div class="drill-options" id="optGrid">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain-box"></div><button id="drillContinue" style="display:none;margin-top:14px" class="btn primary" onclick="nextDrillQ()">Next question →</button></div>`;
+}
+function answerDrill(chosen){
+  const q=DRILL_QS[drillIndex];document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+  const exp=document.getElementById('drillExplain');exp.style.display='block';
+  if(chosen===q.ans){drillScore++;exp.style.background='#EAF3DE';exp.style.color='#27500A';exp.style.border='0.5px solid #C0DD97';exp.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.opt-btn')[chosen].classList.add('wrong');exp.style.background='#FCEBEB';exp.style.color='#A32D2D';exp.style.border='0.5px solid #F7C1C1';exp.textContent='Not quite. '+q.explain;}
+  document.getElementById('drillContinue').style.display='inline-block';
+}
+function nextDrillQ(){drillIndex++;renderDrillQ();}
+function buildRoleplay(){
+  const wrap=document.getElementById('roleplayContent');wrap.innerHTML='';
+  wrap.innerHTML+=`<div class="role-card-grid"><div class="role-card role-card-a"><div class="role-card-title">Student A — Councillor in favour</div><p>You <strong>support</strong> the shopping centre. Your arguments: it creates 300 jobs, brings investment, and will stop people shopping online. You're open to hearing concerns but you believe the evidence is on your side.</p></div><div class="role-card role-card-b"><div class="role-card-title">Student B — Councillor against</div><p>You <strong>oppose</strong> the shopping centre. Your arguments: it will damage small businesses, cause traffic problems, and harm the town's character. You prefer investing in the existing high street.</p></div></div>`;
+  const topics=[
+    {label:'Point 1 — Jobs and the economy',text:'Does the project create real long-term jobs, or mainly low-paid part-time work?'},
+    {label:'Point 2 — Impact on small businesses',text:'Will independent traders survive, or will they be driven out by big chains?'},
+    {label:'Point 3 — Traffic and infrastructure',text:'Can the town\'s roads cope with the increase in visitors?'},
+    {label:'Point 4 — Community identity',text:'Will the development change the character of the town for better or worse?'},
+  ];
+  wrap.innerHTML+=`<div class="card" style="margin-bottom:14px"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);margin-bottom:10px">Debate topics — cover all four points</p>${topics.map(t=>`<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid var(--color-border)"><p style="font-size:11px;font-weight:500;color:#185FA5;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">${t.label}</p><p style="font-size:13px;color:var(--color-text-primary)">${t.text}</p></div>`).join('')}</div>`;
+  ROLEPLAY.forEach(line=>{if(line.speaker==='B'){wrap.innerHTML+=`<div class="int-box"><div class="int-label">Student B — Against</div><div class="int-text">${line.text}</div></div>`;}else{wrap.innerHTML+=`<div class="roleplay-box"><div class="roleplay-label">Student A — In favour</div><div class="roleplay-text">${line.text}</div></div>`;}});
+  wrap.innerHTML+=`<div style="margin-top:14px"><div class="card-muted"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap sides and argue the opposite!</p><p style="font-size:13px;color:var(--color-text-secondary)">Now Student A argues against the development, and Student B argues in favour. This is great practice because it forces you to use different opinion language and challenges your vocabulary.</p></div></div>`;
+}
+function buildSummary(){
+  const items=['8 key vocabulary words for discussions and debates','Functional phrases for 5 functions: asking opinions, giving opinions, agreeing, partially agreeing, and disagreeing politely','6 question form exercises (hedged disagreement, indirect questions, idiomatic agreement, opinion phrases)','A structured debate role play covering 4 real discussion points, with a role-swap extension'];
+  const hw=["Write a short opinion paragraph (80–100 words): 'Do you think social media has more benefits or drawbacks?' Use at least 3 functional phrases from this lesson.","Read a letter to the editor in an English newspaper. Identify phrases the writer uses to express opinions and disagree with others.","With a partner, debate one of these topics using today's language: 'Cars should be banned from city centres' / 'University should be free for everyone'."];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Today's lesson</p><p style="font-size:22px;font-weight:500;margin-bottom:4px">Opinions, Agreeing &amp; Disagreeing</p><p style="font-size:13px;color:var(--color-text-secondary)">B1 level · ~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised today:</p>${items.map(i=>`<div class="bullet-row"><span class="bullet-dot" style="background:#639922"></span><span style="font-size:14px;color:var(--color-text-primary)">${i}</span></div>`).join('')}</div><div class="card-muted"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="bullet-row"><span class="bullet-dot" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip-box" style="margin-bottom:0">Great work today! Confident speakers aren't those who never disagree — they're those who disagree respectfully, support their views with reasons, and listen to others.</div>`;
+}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;gapAnswers={};selectedWord=null;goTo(0);}
+buildGaps();buildFunctional();buildRoleplay();buildSummary();
+</script>
+</body>
+</html>
