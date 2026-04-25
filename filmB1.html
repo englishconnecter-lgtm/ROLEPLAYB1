@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talking About Films and TV — B1 Lesson</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f7fb;
+    --bg-soft: #eef3f9;
+    --surface: rgba(255,255,255,0.9);
+    --surface-strong: #ffffff;
+    --surface-muted: #f7f9fc;
+    --text: #162030;
+    --text-soft: #5f6c7b;
+    --text-faint: #8593a3;
+    --border: rgba(21, 48, 84, 0.12);
+    --border-strong: rgba(21, 48, 84, 0.2);
+    --shadow: 0 18px 48px rgba(28, 53, 88, 0.12);
+    --shadow-soft: 0 10px 30px rgba(28, 53, 88, 0.08);
+    --blue: #1f6fd1;
+    --blue-dark: #184f92;
+    --blue-soft: #eaf3ff;
+    --green: #3e8b33;
+    --green-soft: #eef8e9;
+    --amber: #a86508;
+    --amber-soft: #fff3de;
+    --purple: #7B3FC4;
+    --purple-dark: #5A2B96;
+    --purple-soft: #f2ebfc;
+    --red: #c84242;
+    --red-soft: #fdeeee;
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 26px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1724;
+      --bg-soft: #141f31;
+      --surface: rgba(20, 31, 49, 0.88);
+      --surface-strong: #162133;
+      --surface-muted: #1a2740;
+      --text: #eef4ff;
+      --text-soft: #b4c0cf;
+      --text-faint: #8b9aad;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --shadow: 0 18px 48px rgba(0,0,0,0.28);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.22);
+      --blue: #6bb0ff;
+      --blue-dark: #8cc2ff;
+      --blue-soft: rgba(58, 116, 196, 0.18);
+      --green: #8ecf72;
+      --green-soft: rgba(95, 142, 71, 0.18);
+      --amber: #ffbe64;
+      --amber-soft: rgba(168, 101, 8, 0.18);
+      --purple: #b88cff;
+      --purple-dark: #caa6ff;
+      --purple-soft: rgba(123, 63, 196, 0.18);
+      --red: #ff8d8d;
+      --red-soft: rgba(200, 66, 66, 0.18);
+    }
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(123,63,196,0.15), transparent 28%),
+      radial-gradient(circle at top right, rgba(168,101,8,0.12), transparent 24%),
+      linear-gradient(180deg, var(--bg-soft), var(--bg));
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 18px 56px;
+  }
+  .outer { max-width: 920px; margin: 0 auto; }
+  .ph {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(38,20,56,0.96), rgba(123,63,196,0.88)), linear-gradient(135deg, #351b53, #7B3FC4);
+    color: white;
+    text-align: left;
+    margin-bottom: 22px;
+    padding: 34px 30px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .ph::before, .ph::after { content:""; position:absolute; border-radius:50%; pointer-events:none; opacity:.35; }
+  .ph::before { width:280px; height:280px; right:-80px; top:-110px; background:radial-gradient(circle, rgba(255,255,255,.35), transparent 68%); }
+  .ph::after { width:220px; height:220px; left:-50px; bottom:-120px; background:radial-gradient(circle, rgba(255,255,255,.18), transparent 70%); }
+  .ph h1 { position:relative; z-index:1; font-family:'Fraunces', Georgia, serif; font-size:clamp(2rem,4vw,3rem); line-height:1.08; font-weight:700; margin-bottom:10px; letter-spacing:-0.03em; max-width:680px; }
+  .ph p { position:relative; z-index:1; font-size:15px; color:rgba(255,255,255,.82); margin-bottom:0; }
+  .lvl {
+    position: relative; z-index: 1; display:inline-block; margin-bottom:12px; padding:6px 12px;
+    border-radius:999px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18);
+    font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#fff;
+  }
+  .hero-spotlight {
+    display:grid; grid-template-columns:1.1fr .9fr; gap:22px; align-items:stretch; margin:0 0 26px;
+  }
+  .hero-image-card {
+    overflow:hidden; border-radius:24px; background:var(--surface-strong); border:1px solid var(--border);
+    box-shadow:var(--shadow-soft); min-height:280px;
+  }
+  .hero-image-card img { width:100%; height:100%; min-height:280px; object-fit:cover; display:block; }
+  .hero-copy-card {
+    background:linear-gradient(180deg, var(--surface-strong), var(--surface-muted)); border:1px solid var(--border);
+    border-radius:24px; box-shadow:var(--shadow-soft); padding:24px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .eyebrow {
+    display:inline-block; align-self:flex-start; margin-bottom:10px; padding:6px 12px; font-size:11px; font-weight:800;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--purple); background:var(--purple-soft);
+    border:1px solid rgba(123,63,196,.15); border-radius:999px;
+  }
+  .hero-copy-card h2 { font-family:'Fraunces', Georgia, serif; font-size:clamp(1.5rem,2.6vw,2.15rem); line-height:1.12; margin-bottom:10px; letter-spacing:-0.03em; color:var(--text); }
+  .hero-copy-card p { font-size:14px; line-height:1.75; color:var(--text-soft); }
+  .hero-stats { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+  .hero-stat { padding:10px 12px; border-radius:14px; background:var(--surface-strong); border:1px solid var(--border); font-size:12px; color:var(--text-soft); }
+  .hero-stat strong { display:block; font-size:14px; color:var(--text); margin-bottom:2px; }
+
+  .lw {
+    backdrop-filter: blur(14px); background: var(--surface); border-radius: 30px; border: 1px solid var(--border);
+    box-shadow: var(--shadow); padding: 28px;
+  }
+  .pb { display:flex; align-items:center; gap:10px; margin-bottom:30px; padding:16px; background:var(--surface-muted); border:1px solid var(--border); border-radius:22px; }
+  .sd {
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; color:var(--text-soft); background:var(--surface-strong); cursor:pointer;
+    transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    flex-shrink:0; box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .sd:hover { transform: translateY(-1px); }
+  .sd.active { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); color:#fff; border-color:transparent; box-shadow:0 10px 20px rgba(123,63,196,.28); }
+  .sd.done { background: linear-gradient(135deg, #78b95c, var(--green)); color:#fff; border-color:transparent; }
+  .sl { flex:1; height:2px; background: linear-gradient(90deg, var(--border), transparent); border-radius:999px; }
+  .sec { display:none; }
+  .sec.active { display:block; animation: fadeUp .28s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0);} }
+  .sh {
+    display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:800; color:var(--purple); letter-spacing:.12em;
+    text-transform:uppercase; margin-bottom:10px; padding:6px 12px; border-radius:999px; background:var(--purple-soft);
+    border:1px solid rgba(123,63,196,.14);
+  }
+  .st { font-family:'Fraunces', Georgia, serif; font-size:clamp(1.7rem,3vw,2.2rem); font-weight:600; color:var(--text); margin-bottom:8px; line-height:1.14; letter-spacing:-0.02em; }
+  .ss { font-size:14px; color:var(--text-soft); margin-bottom:22px; }
+  .card, .card-m { border-radius:22px; padding:18px 20px; margin-bottom:14px; border:1px solid var(--border); box-shadow:var(--shadow-soft); }
+  .card { background:var(--surface-strong); }
+  .card-m { background:linear-gradient(180deg, var(--surface-muted), rgba(255,255,255,.3)); }
+  .vg { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:18px; }
+  .vc {
+    background: linear-gradient(180deg, var(--purple-soft), rgba(255,255,255,.8)); border:1px solid rgba(123,63,196,.18); border-radius:14px;
+    padding:11px 12px; font-size:13px; font-weight:700; color:var(--purple-dark); text-align:center; cursor:pointer;
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease; user-select:none; box-shadow:0 8px 18px rgba(123,63,196,.08);
+  }
+  .vc:hover { transform:translateY(-1px); box-shadow:0 12px 22px rgba(123,63,196,.12); }
+  .vc.used { background:var(--surface-muted); color:var(--text-faint); border-color:var(--border); opacity:.58; box-shadow:none; }
+  .vc.selected { outline:none; box-shadow:0 0 0 3px rgba(123,63,196,.18), 0 14px 24px rgba(123,63,196,.12); transform:translateY(-1px); }
+  .gs { font-size:15px; color:var(--text); line-height:2.25; margin-bottom:12px; }
+  .gap { display:inline-block; min-width:118px; min-height:28px; border-bottom:2px solid var(--purple); margin:0 5px; text-align:center; font-weight:700; color:var(--purple-dark); font-size:14px; cursor:pointer; vertical-align:bottom; padding:0 6px; transition:all .16s ease; border-radius:8px 8px 0 0; background:rgba(123,63,196,.04); }
+  .gap.correct { border-bottom-color:var(--green); color:#255c1d; background:var(--green-soft); }
+  .gap.wrong { border-bottom-color:var(--red); color:#992e2e; background:var(--red-soft); animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .fm { font-size:13px; padding:12px 15px; border-radius:14px; margin-bottom:14px; display:none; border:1px solid transparent; }
+  .fm.show { display:block; }
+  .fm.ok { background:var(--green-soft); color:#255c1d; border-color:rgba(62,139,51,0.2); }
+  .fm.err { background:var(--red-soft); color:#992e2e; border-color:rgba(200,66,66,0.2); }
+  .dq { font-size:16px; font-weight:600; color:var(--text); margin-bottom:16px; line-height:1.65; }
+  .do { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  @media (max-width:560px) { .do { grid-template-columns:1fr; } }
+  .ob, .btn { border-radius:14px; transition:transform .16s ease, background .16s ease, box-shadow .16s ease, border-color .16s ease; }
+  .ob {
+    background:var(--surface-strong); border:1px solid var(--border-strong); padding:12px 14px; font-size:14px; color:var(--text);
+    cursor:pointer; text-align:left; line-height:1.55; box-shadow:0 6px 14px rgba(28,53,88,0.05);
+  }
+  .ob:hover:not(:disabled) { background:var(--surface-muted); transform:translateY(-1px); }
+  .ob.correct { background:var(--green-soft); border-color:rgba(62,139,51,0.3); color:#255c1d; }
+  .ob.wrong { background:var(--red-soft); border-color:rgba(200,66,66,0.28); color:#992e2e; }
+  .ob:disabled { cursor:default; }
+  .pc, .tb { font-size:12px; color:var(--text-soft); }
+  .nr { display:flex; gap:10px; margin-top:24px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+  .nrr { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .btn {
+    background:var(--surface-strong); border:1px solid var(--border-strong); padding:10px 18px; font-size:14px; color:var(--text); cursor:pointer; box-shadow:0 8px 18px rgba(28,53,88,0.06);
+  }
+  .btn:hover { background:var(--surface-muted); transform:translateY(-1px); }
+  .btn.p { background:linear-gradient(135deg, var(--purple), var(--purple-dark)); color:#fff; border-color:transparent; box-shadow:0 12px 24px rgba(123,63,196,0.24); }
+  .btn.p:hover { filter:brightness(1.02); }
+  .tb { background:var(--surface-muted); border:1px solid var(--border); border-radius:999px; padding:7px 12px; }
+  .rb, .ib {
+    border-radius:0 18px 18px 18px; padding:14px 16px; margin-bottom:12px; border-left-width:4px; box-shadow:var(--shadow-soft);
+  }
+  .rb { border-left:4px solid var(--purple); background:linear-gradient(180deg, var(--purple-soft), rgba(255,255,255,0.6)); }
+  .ib { border-left:4px solid var(--green); background:linear-gradient(180deg, var(--green-soft), rgba(255,255,255,0.6)); }
+  .rl2, .il { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+  .rl2 { color:var(--purple-dark); }
+  .il { color:#255c1d; }
+  .rt, .it { font-size:14px; line-height:1.75; }
+  .rt { color:var(--purple-dark); }
+  .it { color:#255c1d; }
+  .tip {
+    background:linear-gradient(180deg, var(--amber-soft), rgba(255,255,255,0.7)); border:1px solid rgba(168,101,8,0.22);
+    border-radius:16px; padding:12px 14px; font-size:13px; color:#6d4308; margin-bottom:16px; box-shadow:0 8px 18px rgba(168,101,8,0.08);
+  }
+  .sc {
+    width:96px; height:96px; border-radius:50%; border:4px solid rgba(123,63,196,0.18);
+    background: radial-gradient(circle at 30% 30%, rgba(123,63,196,0.12), transparent 65%), var(--surface-muted);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; margin:0 auto 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .sn { font-size:26px; font-weight:800; color:var(--purple-dark); }
+  .sl2 { font-size:10px; color:var(--text-soft); text-transform:uppercase; letter-spacing:.1em; }
+  .tag { display:inline-block; font-size:11px; font-weight:700; padding:5px 10px; border-radius:999px; margin-right:6px; margin-bottom:6px; }
+  .tb2 { background:var(--purple-soft); color:var(--purple-dark); border:1px solid rgba(123,63,196,.16); }
+  .tg { background:var(--green-soft); color:#255c1d; border:1px solid rgba(62,139,51,.16); }
+  .ta { background:var(--amber-soft); color:#6d4308; border:1px solid rgba(168,101,8,.18); }
+  .br { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .bd { margin-top:7px; width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .eb { font-size:13px; padding:12px 14px; border-radius:14px; margin-top:8px; display:none; }
+  .rcg { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  @media (max-width:760px) {
+    .hero-spotlight, .rcg { grid-template-columns:1fr; }
+    .hero-image-card, .hero-image-card img { min-height:220px; }
+  }
+  .rc { border-radius:22px; padding:1rem 1.25rem; border:1px solid var(--border); box-shadow:var(--shadow-soft); }
+  .rca { background:linear-gradient(180deg, var(--purple-soft), rgba(255,255,255,.5)); }
+  .rcb { background:linear-gradient(180deg, var(--green-soft), rgba(255,255,255,.5)); }
+  .rct { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+  .rca .rct { color:var(--purple-dark); }
+  .rcb .rct { color:#255c1d; }
+  .rc p { font-size:13px; line-height:1.7; }
+  .rca p { color:var(--purple-dark); }
+  .rcb p { color:#255c1d; }
+  @media (max-width:700px) {
+    body { padding:20px 14px 40px; }
+    .ph { padding:26px 22px; border-radius:24px; }
+    .lw { padding:18px; border-radius:24px; }
+    .pb { padding:12px; gap:8px; overflow-x:auto; }
+    .sl { min-width:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="ph">
+    <div class="lvl">B1 — Intermediate</div>
+    <h1>Talking About Films and TV</h1>
+    <p>B1 level &nbsp;·&nbsp; 40-minute interactive lesson</p>
+  </div>
+  <div class="lw">
+    <div class="pb" id="pb">
+      <div class="sd active" onclick="goTo(0)">1</div><div class="sl"></div>
+      <div class="sd" onclick="goTo(1)">2</div><div class="sl"></div>
+      <div class="sd" onclick="goTo(2)">3</div><div class="sl"></div>
+      <div class="sd" onclick="goTo(3)">4</div><div class="sl"></div>
+      <div class="sd" onclick="goTo(4)">5</div><div class="sl"></div>
+      <div class="sd" onclick="goTo(5)">6</div>
+    </div>
+
+    <div class="sec active" id="sec0">
+      <div class="sh">Stage 1 — Warm-up</div>
+      <div class="st">Films, TV and your opinions</div>
+      <div class="ss">5 minutes · Discussion and context</div>
+      <div class="hero-spotlight">
+        <div class="hero-image-card">
+          <img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="People watching a film in a cinema with warm dramatic lighting">
+        </div>
+        <div class="hero-copy-card">
+          <span class="eyebrow">Lesson preview</span>
+          <h2>Talk about films and TV with more detail and confidence</h2>
+          <p>This lesson helps learners describe plots, give balanced opinions, recommend series, and discuss strengths and weaknesses using richer review language.</p>
+          <div class="hero-stats">
+            <div class="hero-stat"><strong>B1</strong>CEFR level</div>
+            <div class="hero-stat"><strong>40 min</strong>Interactive lesson</div>
+            <div class="hero-stat"><strong>6 stages</strong>Film discussion flow</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-m">
+        <p style="font-size:14px;font-weight:500;margin-bottom:10px">Discuss with your partner:</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">1. What was the last film or TV series that really impressed you? Why?</p>
+        <p style="font-size:14px;line-height:1.8;margin-bottom:4px">2. Do you prefer watching films at home or at the cinema? What are the advantages of each?</p>
+        <p style="font-size:14px;line-height:1.8">3. What is the difference between a film you "enjoyed" and a film you thought was "well-made"? Can a film be both?</p>
+      </div>
+      <div class="tip"><strong>Teacher note:</strong> At B1 students move from simple likes/dislikes to giving reasons, comparing, and discussing themes. Introduce: "I found it..." / "What I liked most was..." / "I was a bit disappointed because..." Focus on past tenses for plot summaries and adjective variety.</div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--txt2);margin-bottom:10px">Today's scenario — two friends discussing what to watch and reviewing a recent film:</p>
+        <div class="rcg" style="margin-bottom:8px">
+          <div class="rc rca"><div class="rct">Student A</div><p>You recently watched a drama series called <em>The Broken Hours</em> (fictional). A slow-burn thriller about a detective solving a mystery in a remote village. You loved the atmosphere and acting but thought the ending was disappointing.</p></div>
+          <div class="rc rcb"><div class="rct">Student B</div><p>You have not seen it. You enjoy thrillers and crime dramas. You want to know if it is worth watching. You ask questions and give your own opinions on similar shows you have seen.</p></div>
+        </div>
+        <div><span class="tag tb2">Film review</span><span class="tag tg">Recommendation</span><span class="tag ta">Opinion language</span></div>
+      </div>
+      <div class="nr"><span class="tb">5 min</span><button class="btn p" onclick="goTo(1)">Next: vocabulary &#x2192;</button></div>
+    </div>
+
+    <div class="sec" id="sec1">
+      <div class="sh">Stage 2 — Vocabulary</div>
+      <div class="st">Film review vocabulary</div>
+      <div class="ss">10 minutes · Gap-fill exercise</div>
+      <div class="tip">Click a word from the box, then click a blank. Hover for definitions.</div>
+      <div class="vg" id="wordBank"></div>
+      <div id="gapFeedback" class="fm"></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--txt2);margin-bottom:14px">Complete the sentences with the correct word from the box.</p>
+        <div id="gapSentences"></div>
+      </div>
+      <div class="nr">
+        <button class="btn" onclick="goTo(0)">&#x2190; back</button>
+        <div class="nrr"><span class="tb">10 min</span><button class="btn" onclick="checkGaps()">Check answers</button><button class="btn p" onclick="goTo(2)">Next &#x2192;</button></div>
+      </div>
+    </div>
+
+    <div class="sec" id="sec2">
+      <div class="sh">Stage 3 — Functional language</div>
+      <div class="st">Phrases for discussing films and TV</div>
+      <div class="ss">8 minutes · Study and practise</div>
+      <div id="funcContent"></div>
+      <div class="nr">
+        <button class="btn" onclick="goTo(1)">&#x2190; back</button>
+        <div class="nrr"><span class="tb">8 min</span><button class="btn p" onclick="goTo(3)">Next &#x2192;</button></div>
+      </div>
+    </div>
+
+    <div class="sec" id="sec3">
+      <div class="sh">Stage 4 — Question forms</div>
+      <div class="st">Film and TV grammar drill</div>
+      <div class="ss">10 minutes · Multiple choice</div>
+      <div id="drillWrap"></div>
+      <div class="nr">
+        <button class="btn" onclick="goTo(2)">&#x2190; back</button>
+        <div class="nrr"><span class="tb">10 min</span><button class="btn p" id="drillNextBtn" onclick="goTo(4)" style="display:none">Next: role play &#x2192;</button></div>
+      </div>
+    </div>
+
+    <div class="sec" id="sec4">
+      <div class="sh">Stage 5 — Role play</div>
+      <div class="st">The film recommendation conversation</div>
+      <div class="ss">12 minutes · Pair work</div>
+      <div class="tip"><strong>How to use:</strong> Student A reviews the fictional series. Student B asks questions and gives opinions on similar shows. Agree or disagree — use phrases from Stage 3.</div>
+      <div id="roleplayContent"></div>
+      <div class="nr">
+        <button class="btn" onclick="goTo(3)">&#x2190; back</button>
+        <div class="nrr"><span class="tb">12 min</span><button class="btn p" onclick="goTo(5)">Finish &#x2192;</button></div>
+      </div>
+    </div>
+
+    <div class="sec" id="sec5">
+      <div class="sh">Stage 6 — Summary</div>
+      <div class="st">Lesson complete!</div>
+      <div class="ss">5 minutes · Review</div>
+      <div id="summaryContent"></div>
+      <div class="nr">
+        <button class="btn" onclick="goTo(4)">&#x2190; back</button>
+        <button class="btn p" onclick="restartLesson()">Start again &#x21BA;</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let cs=0,sw=null,ga={},ds=0,di=0,dd=false;
+const WORDS=[
+  {word:'gripping',    def:'so exciting or interesting that you cannot stop watching'},
+  {word:'plot twist',  def:'a surprising change in the story'},
+  {word:'overrated',   def:'not as good as people say; given too much praise'},
+  {word:'performance', def:'how well an actor acts in a film or show'},
+  {word:'atmosphere',  def:'the mood or feeling created by a film'},
+  {word:'binge-watch', def:'to watch many episodes of a series in one sitting'},
+  {word:'soundtrack',  def:'the music used in a film or TV show'},
+  {word:'cliffhanger', def:'an exciting ending that makes you want to see what happens next'},
+];
+const GAPS=[
+  {id:'g0',before:'I could not stop watching — the story was absolutely ',blank:'gripping',after:' from start to finish.'},
+  {id:'g1',before:'There was a huge ',blank:'plot twist',after:' in the final episode that completely changed the story.'},
+  {id:'g2',before:'I think that film is a bit ',blank:'overrated',after:' — everyone loves it but I found it quite ordinary.'},
+  {id:'g3',before:'The lead actor\'s ',blank:'performance',after:' was outstanding — she completely deserved the award.'},
+  {id:'g4',before:'The dark, rainy settings created a wonderful ',blank:'atmosphere',after:' — it felt very tense and mysterious.'},
+  {id:'g5',before:'I ',blank:'binge-watch',after:'ed the whole series in one weekend — I could not stop.'},
+  {id:'g6',before:'The ',blank:'soundtrack',after:' was incredible — the music added so much emotion to the story.'},
+  {id:'g7',before:'The episode ended on a huge ',blank:'cliffhanger',after:' — I immediately started the next one.'},
+];
+const FUNC_CATS=[
+  {label:'Giving an overview',phrases:['It\'s a slow-burn thriller set in a remote Scottish village.','It follows a detective who is trying to solve a series of mysterious disappearances.','The story is told from the perspective of the main character\'s daughter.','It\'s a six-part series — each episode is about an hour long.']},
+  {label:'Recommending and reviewing',phrases:['I would definitely recommend it — especially if you like crime dramas.','The first episode is a bit slow, but it gets much better.','What I liked most was the atmosphere — it felt very dark and unsettling.','I was a bit disappointed by the ending — it felt rushed.']},
+  {label:'Agreeing and disagreeing about opinions',phrases:['I know what you mean — I felt the same about a similar show.','Really? I actually thought that kind of ending worked quite well.','I see your point, but for me the characters made up for it.','That\'s interesting — I had the opposite reaction to that scene.']},
+  {label:'Asking for more detail',phrases:['Is it the kind of thing you can watch in the background, or does it need your full attention?','Does it get better after the first episode?','How many series are there?','Is it based on a book or an original story?']},
+  {label:'Talking about what makes TV good',phrases:['What makes it stand out is the quality of the writing.','The casting is perfect — every actor really suits their role.','It deals with some quite serious themes, but in a very human way.','The pacing is slow, but that\'s what makes it so tense.']},
+];
+const DRILL_QS=[
+  {q:'You want to say the acting was excellent. Which sentence is most natural at B1?',
+   opts:['The actor acted very well.','The lead actor\'s performance was outstanding.','The acting was very good performing.','The actor performanced greatly.'],
+   ans:1,explain:'"Performance" (noun) + "outstanding" (adjective) is natural B1 review language. Avoid "performanced" — it is not a word.'},
+  {q:'You want to describe the setting. Which uses a relative clause correctly?',
+   opts:['It set in a village which remote.','It is set in a remote village, which adds to the atmosphere.','It set in a village that remote is.','It is set in a village where is very remote.'],
+   ans:1,explain:'"Set in... which + adds to..." uses a non-defining relative clause correctly to add information.'},
+  {q:'You want to partially disagree with your friend\'s opinion. Which is most natural?',
+   opts:['You are wrong.','I see your point, but for me the characters made up for it.','I not agree with you.','That opinion is wrong I think.'],
+   ans:1,explain:'"I see your point, but..." is a polite, balanced way to disagree — essential for natural B1 discussion.'},
+  {q:'You want to say you watched the whole series very quickly. Which is correct?',
+   opts:['I saw all the series fast.','I binge-watched the whole series in one weekend.','I watched quickly all the episodes.','I finished to watch the series in one weekend.'],
+   ans:1,explain:'"Binge-watched" is the natural colloquial verb for watching many episodes at once. "In one weekend" is the correct time expression.'},
+  {q:'You want to give a recommendation with a condition. Which structure is correct?',
+   opts:['If you like thrillers, you should watch it.','If you like thrillers, you should to watch it.','You should watch if like thrillers.','Watching it if you like thrillers is a good idea.'],
+   ans:0,explain:'"If + present simple, you should + infinitive" is a type 1 conditional for genuine recommendations.'},
+  {q:'You want to say the ending was disappointing. Which is correct?',
+   opts:['The ending was disappointed.','I was disappointing by the ending.','I was a bit disappointed by the ending — it felt rushed.','The ending disappointed for me.'],
+   ans:2,explain:'"I was disappointed by..." — use "disappointed" (adjective describing how you felt). Never "disappointing" for a person.'},
+];
+const ROLEPLAY=[
+  {speaker:'B',text:'Have you watched anything good recently? I\'m looking for something new to start.'},
+  {speaker:'A',text:'[Recommend The Broken Hours. Say it is a slow-burn thriller set in a remote village. Say who the main character is.]'},
+  {speaker:'B',text:'That sounds interesting. Is it the kind of thing you have to concentrate on, or can you watch it casually?'},
+  {speaker:'A',text:'[Say it needs your full attention — it is quite slow at first. But say it is very rewarding. Mention the atmosphere.]'},
+  {speaker:'B',text:'I love a slow-burn thriller. How many episodes is it? Is it still going, or is it finished?'},
+  {speaker:'A',text:'[Say there is one series of six episodes, each about an hour long. Say it is complete — no second series yet.]'},
+  {speaker:'B',text:'What did you like most about it?'},
+  {speaker:'A',text:'[Say what you liked: the atmosphere, the lead performance, the writing. Give one specific example of a scene or moment that stood out.]'},
+  {speaker:'B',text:'Was there anything you didn\'t like?'},
+  {speaker:'A',text:'[Be honest — say you were a bit disappointed by the ending. Explain why without spoiling too much.]'},
+  {speaker:'B',text:'A weak ending is so frustrating! I had the same problem with a show I watched recently — the last episode felt really rushed. I know exactly what you mean.'},
+  {speaker:'A',text:'[Agree and relate to their experience. Ask what show they are talking about. Ask if they would still recommend it despite the ending.]'},
+  {speaker:'B',text:'[Name a show. Say the first two series were brilliant but the third series was a letdown. Ask Student A if they want to watch The Broken Hours together.]'},
+  {speaker:'A',text:'[Respond enthusiastically. Agree on when. Ask if they want to start with the first episode this weekend.]'},
+];
+function goTo(n){
+  document.querySelectorAll('.sec').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.sd').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
+  cs=n;if(n===1)bG();if(n===2)bF();if(n===3&&!dd)bD();if(n===4)bR();if(n===5)bS();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function bG(){
+  const bank=document.getElementById('wordBank');bank.innerHTML='';
+  WORDS.forEach(w=>{const c=document.createElement('div');c.className='vc';c.textContent=w.word;c.id='chip_'+w.word.replace(/\s/g,'_');c.title=w.def;c.onclick=()=>selW(w.word);bank.appendChild(c);});
+  const ct=document.getElementById('gapSentences');ct.innerHTML='';
+  GAPS.forEach(g=>{const p=document.createElement('p');p.className='gs';p.innerHTML=(g.before||'')+`<span class="gap" id="${g.id}" onclick="fG('${g.id}')"></span>`+(g.after||'');ct.appendChild(p);});
+}
+function selW(w){
+  document.querySelectorAll('.vc').forEach(c=>c.classList.remove('selected'));
+  if(sw===w){sw=null;return;}sw=w;const key=w.replace(/\s/g,'_');const c=document.getElementById('chip_'+key);if(c)c.classList.add('selected');
+}
+function fG(gid){
+  const gap=document.getElementById(gid);if(!gap)return;
+  const cur=gap.textContent.trim();
+  if(cur){const key=cur.replace(/\s/g,'_');const c=document.getElementById('chip_'+key);if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');delete ga[gid];return;}
+  if(!sw)return;const key=sw.replace(/\s/g,'_');const chip=document.getElementById('chip_'+key);if(chip&&chip.classList.contains('used'))return;
+  gap.textContent=sw;ga[gid]=sw;if(chip)chip.classList.add('used');sw=null;document.querySelectorAll('.vc').forEach(c=>c.classList.remove('selected'));
+}
+function checkGaps(){
+  let ok=0;GAPS.forEach(g=>{const gap=document.getElementById(g.id);const val=gap?gap.textContent.trim():'';if(val===g.blank){gap.classList.add('correct');gap.classList.remove('wrong');ok++;}else if(val){gap.classList.add('wrong');gap.classList.remove('correct');}});
+  const fb=document.getElementById('gapFeedback');fb.className='fm show '+(ok===GAPS.length?'ok':'err');
+  fb.textContent=ok===GAPS.length?`All ${GAPS.length} correct! Excellent work.`:`${ok} of ${GAPS.length} correct. Check highlighted answers and try again.`;
+}
+function bF(){
+  const w=document.getElementById('funcContent');w.innerHTML='';
+  FUNC_CATS.forEach(cat=>{let h=`<div class="card"><p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--txt2);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(ph=>{h+=`<div class="br"><span class="bd" style="background:#378ADD"></span><span style="font-size:14px;color:var(--txt);line-height:1.6">${ph}</span></div>`;});h+='</div>';w.innerHTML+=h;});
+  w.innerHTML+=`<div class="tip">The key to natural film conversation is going beyond "I liked it / I didn't like it." Say WHY — use specific examples from the film and vocabulary like "atmosphere", "pacing", and "performance" to sound natural and precise.</div>`;
+}
+function bD(){di=0;ds=0;rDQ();}
+function rDQ(){
+  const w=document.getElementById('drillWrap');
+  if(di>=DRILL_QS.length){dd=true;document.getElementById('drillNextBtn').style.display='inline-block';w.innerHTML=`<div class="card" style="text-align:center;padding:2rem 1.25rem"><p style="font-size:13px;color:var(--txt2);margin-bottom:14px">Quiz complete!</p><div class="sc"><span class="sn">${ds}/${DRILL_QS.length}</span><span class="sl2">score</span></div><p style="font-size:15px;font-weight:500;color:var(--txt)">${ds===DRILL_QS.length?'Perfect score!':ds>=4?'Great job!':'Good effort! Review and try again.'}</p></div>`;return;}
+  const q=DRILL_QS[di];
+  w.innerHTML=`<p class="pc">Question ${di+1} of ${DRILL_QS.length}</p><div class="card"><p class="dq">${q.q}</p><div class="do">${q.opts.map((o,i)=>`<button class="ob" onclick="aD(${i})">${o}</button>`).join('')}</div><div id="de" class="eb"></div><button id="dc" style="display:none;margin-top:14px" class="btn p" onclick="nDQ()">Next &#x2192;</button></div>`;
+}
+function aD(ch){
+  const q=DRILL_QS[di];document.querySelectorAll('.ob').forEach(b=>b.disabled=true);document.querySelectorAll('.ob')[q.ans].classList.add('correct');
+  const e=document.getElementById('de');e.style.display='block';
+  if(ch===q.ans){ds++;e.style.background='#EAF3DE';e.style.color='#27500A';e.style.border='0.5px solid #C0DD97';e.textContent='Correct! '+q.explain;}
+  else{document.querySelectorAll('.ob')[ch].classList.add('wrong');e.style.background='#FCEBEB';e.style.color='#A32D2D';e.style.border='0.5px solid #F7C1C1';e.textContent='Not quite. '+q.explain;}
+  document.getElementById('dc').style.display='inline-block';
+}
+function nDQ(){di++;rDQ();}
+function bR(){
+  const w=document.getElementById('roleplayContent');w.innerHTML='';
+  ROLEPLAY.forEach(line=>{if(line.speaker==='B'){w.innerHTML+=`<div class="ib"><div class="il">Student B — Friend</div><div class="it">${line.text}</div></div>`;}else{w.innerHTML+=`<div class="rb"><div class="rl2">Student A — Recommender</div><div class="rt">${line.text}</div></div>`;}});
+  w.innerHTML+=`<div style="margin-top:14px"><div class="card-m"><p style="font-size:14px;font-weight:500;margin-bottom:6px">Swap roles — use a real film or series!</p><p style="font-size:13px;color:var(--txt2)">This time both students use a real film or TV series they have actually seen. Student B recommends something to Student A and reviews it honestly — including any weaknesses.</p></div></div>`;
+}
+function bS(){
+  const items=['8 film review vocabulary words: gripping, plot twist, overrated, cliffhanger, and more','Phrases for 5 film conversation functions: overview, recommendation, agreeing/disagreeing, asking for detail, analysing what makes TV good','6 grammar drills: "disappointed by", relative clauses, conditional recommendations, binge-watching vocabulary','A film recommendation role play with a fictional series, then a real-film extension'];
+  const hw=['Write a short film or TV review (100-120 words) using at least 5 vocabulary words from this lesson. Include what you liked and what could be improved.','Find a film review in English online. Identify 5 opinion phrases the writer uses. Write them down and note what function each one has.','With a partner, practise recommending a real series without naming it. The other person must guess what it is from your description.'];
+  document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center;padding:1.75rem 1.25rem"><p style="font-size:13px;color:var(--txt2);margin-bottom:10px">Today\'s lesson</p><div class="lvl">B1 — Intermediate</div><p style="font-size:22px;font-weight:500;margin:8px 0 4px">Talking About Films and TV</p><p style="font-size:13px;color:var(--txt2)">~40 minutes</p></div><div class="card"><p style="font-size:13px;font-weight:500;margin-bottom:10px">What you practised:</p>${items.map(i=>`<div class="br"><span class="bd" style="background:#639922"></span><span style="font-size:14px;color:var(--txt)">${i}</span></div>`).join('')}</div><div class="card-m"><p style="font-size:13px;font-weight:500;margin-bottom:8px">Homework ideas:</p>${hw.map((h,i)=>`<div class="br"><span class="bd" style="background:#378ADD;margin-top:7px"></span><span style="font-size:13px;color:var(--txt2);line-height:1.7">${i+1}. ${h}</span></div>`).join('')}</div><div class="tip" style="margin-bottom:0">Great work! Film and TV is one of the richest topics for English practice. The vocabulary and structures you learned today can be used in any conversation about culture and entertainment.</div>`;
+}
+function restartLesson(){dd=false;ds=0;di=0;ga={};sw=null;goTo(0);}
+bG();bF();bR();bS();
+</script>
+</body>
+</html>
