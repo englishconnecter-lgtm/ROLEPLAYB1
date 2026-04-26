@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conference Calls — B1 60-Minute Lesson</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#fff;--bg2:#f6f8fb;--bg3:#edf3f8;--txt:#17212b;--txt2:#667085;--bdr:rgba(15,23,42,.1);--bdr2:rgba(15,23,42,.2);--blue:#185FA5;--blue2:#0C447C;--green:#4a8f3b;--amber:#a86508;--red:#c84242;--softblue:#eaf3ff;--softgreen:#eef8e9;--softamber:#fff3de;--softred:#fdeeee;--r:16px;--shadow:0 16px 40px rgba(24,45,75,.09)}
+  @media(prefers-color-scheme:dark){:root{--bg:#111827;--bg2:#182230;--bg3:#0f1724;--txt:#ecf3fb;--txt2:#a8b3c5;--bdr:rgba(255,255,255,.1);--bdr2:rgba(255,255,255,.2);--softblue:rgba(58,116,196,.18);--softgreen:rgba(95,142,71,.18);--softamber:rgba(168,101,8,.18);--softred:rgba(200,66,66,.18)}}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at top left,rgba(24,95,165,.14),transparent 28%),linear-gradient(180deg,var(--bg3),#e7edf5);color:var(--txt);min-height:100vh;padding:32px 16px 56px}
+  .outer{max-width:920px;margin:0 auto}.head{text-align:center;margin-bottom:22px}.lvl{display:inline-block;background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}.head h1{font-size:32px;letter-spacing:-.03em;margin-bottom:6px}.head p{font-size:14px;color:var(--txt2)}
+  .wrap{background:rgba(255,255,255,.9);border:1px solid var(--bdr);box-shadow:var(--shadow);border-radius:28px;padding:28px;backdrop-filter:blur(12px)}
+  @media(prefers-color-scheme:dark){.wrap{background:rgba(17,24,39,.9)}}
+  .progress{display:flex;align-items:center;gap:8px;margin-bottom:26px;padding:12px;border-radius:20px;background:var(--bg2);border:1px solid var(--bdr);overflow-x:auto}.dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--bdr2);background:var(--bg);color:var(--txt2);font-size:12px;font-weight:700;cursor:pointer}.dot.active{background:linear-gradient(135deg,var(--blue),#2f7ac4);color:#fff;border-color:transparent}.dot.done{background:var(--softgreen);color:#27500A;border-color:#c0dd97}.line{height:2px;min-width:18px;flex:1;background:var(--bdr);border-radius:99px}
+  .sec{display:none}.sec.active{display:block;animation:fade .25s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .sh{font-size:11px;font-weight:800;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}.st{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}.ss{font-size:14px;color:var(--txt2);margin-bottom:20px}
+  .hero{min-height:310px;border-radius:24px;padding:28px;display:flex;align-items:end;background:linear-gradient(120deg,rgba(8,26,56,.9),rgba(24,95,165,.55)),url('https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;color:#fff;margin-bottom:16px;overflow:hidden}.hero h2{font-size:34px;line-height:1.08;letter-spacing:-.04em;margin-bottom:10px;max-width:520px}.hero p{font-size:15px;line-height:1.65;color:rgba(255,255,255,.86);max-width:620px}.pillrow{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}.pill{font-size:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:7px 10px;color:#fff}
+  .card,.muted{border:1px solid var(--bdr);border-radius:20px;padding:18px 20px;margin-bottom:14px;box-shadow:0 8px 22px rgba(15,23,42,.04)}.card{background:var(--bg)}.muted{background:var(--bg2)}.tip{background:var(--softamber);border:1px solid rgba(168,101,8,.2);border-radius:16px;padding:12px 14px;font-size:13px;color:#74480b;margin-bottom:14px;line-height:1.55}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}.chip{background:var(--softblue);border:1px solid rgba(24,95,165,.18);border-radius:14px;padding:10px 12px;text-align:center;font-size:13px;font-weight:700;color:var(--blue2);cursor:pointer}.chip.selected{box-shadow:0 0 0 3px rgba(24,95,165,.2)}.chip.used{opacity:.45;background:var(--bg2);color:var(--txt2)}
+  .sent{font-size:15px;line-height:2.2;margin-bottom:10px}.gap{display:inline-block;min-width:110px;min-height:28px;border-bottom:2px solid var(--blue);margin:0 5px;text-align:center;font-weight:700;color:var(--blue2);cursor:pointer;padding:0 6px;background:rgba(24,95,165,.04);border-radius:8px 8px 0 0}.gap.correct{border-bottom-color:var(--green);color:#255c1d;background:var(--softgreen)}.gap.wrong{border-bottom-color:var(--red);color:#992e2e;background:var(--softred)}
+  .fb{display:none;font-size:13px;padding:12px 14px;border-radius:14px;margin-bottom:14px}.fb.show{display:block}.ok{background:var(--softgreen);color:#255c1d;border:1px solid rgba(74,143,59,.2)}.err{background:var(--softred);color:#992e2e;border:1px solid rgba(200,66,66,.2)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.opt{background:var(--bg);border:1px solid var(--bdr2);border-radius:14px;padding:12px 14px;font-size:14px;text-align:left;color:var(--txt);cursor:pointer;line-height:1.5}.opt.correct{background:var(--softgreen);border-color:#c0dd97;color:#255c1d}.opt.wrong{background:var(--softred);border-color:#f7c1c1;color:#992e2e}.opt:disabled{cursor:default}@media(max-width:600px){.opts{grid-template-columns:1fr}.wrap{padding:20px}.hero{min-height:auto;padding:22px}.hero h2{font-size:28px}}
+  .explain{display:none;font-size:13px;padding:12px 14px;border-radius:14px;margin-top:8px}.counter{font-size:12px;color:var(--txt2);margin-bottom:8px}.score{width:92px;height:92px;border-radius:50%;border:4px solid var(--blue);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 16px}.score strong{font-size:24px;color:var(--blue)}.score span{font-size:10px;color:var(--txt2)}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px}.right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.btn{background:var(--bg);border:1px solid var(--bdr2);border-radius:14px;padding:10px 18px;font-size:14px;color:var(--txt);cursor:pointer}.btn:hover{background:var(--bg2)}.btn.primary{background:linear-gradient(135deg,var(--blue),#2f7ac4);color:#fff;border-color:transparent}.time{font-size:11px;color:var(--txt2);background:var(--bg2);border:1px solid var(--bdr);border-radius:999px;padding:7px 12px}
+  .phrase{display:flex;gap:9px;margin-bottom:9px;align-items:flex-start}.bullet{width:7px;height:7px;border-radius:50%;background:var(--blue);margin-top:7px;flex-shrink:0}.rolegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}@media(max-width:640px){.rolegrid{grid-template-columns:1fr}}.rolea{background:var(--softblue);border-color:rgba(24,95,165,.2);color:var(--blue2)}.roleb{background:var(--softgreen);border-color:rgba(74,143,59,.2);color:#255c1d}.rolelineA,.rolelineB{border-left:4px solid;border-radius:0 18px 18px 18px;padding:14px 16px;margin-bottom:10px;line-height:1.7;font-size:14px}.rolelineA{background:var(--softblue);border-left-color:var(--blue);color:var(--blue2)}.rolelineB{background:var(--softgreen);border-left-color:var(--green);color:#255c1d}.label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:5px}
+  .matchrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}.matchrow select{border:1px solid var(--bdr2);background:var(--bg);color:var(--txt);border-radius:12px;padding:9px}.mini{font-size:13px;color:var(--txt2);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="head"><div class="lvl">B1 — Intermediate</div><h1>Conference Calls</h1><p>B1 level · 60-minute interactive lesson</p></div>
+  <div class="wrap">
+    <div class="progress" id="progress"></div>
+
+    <section class="sec active" id="sec0">
+      <div class="hero"><div><h2>Speak clearly on video and telephone calls</h2><p>Practise simple call language for joining a meeting, fixing sound and video problems, asking people to repeat, giving a short update, and ending politely.</p><div class="pillrow"><span class="pill">60 minutes</span><span class="pill">8 stages</span><span class="pill">More grammar + vocabulary</span></div></div></div>
+      <div class="sh">Stage 1 — Warm-up</div><div class="st">Video calls at work</div><div class="ss">6 minutes · Simple discussion</div>
+      <div class="muted"><p style="font-weight:600;margin-bottom:10px">Talk to your partner:</p><p class="mini">1. Which app do you use for calls: Zoom, Teams, Google Meet, or another app?</p><p class="mini">2. What problems happen on calls?</p><p class="mini">3. What phrase do you say when you cannot hear someone?</p></div>
+      <div class="tip"><strong>Teacher note:</strong> Drill survival phrases several times: “Can you hear me?”, “Sorry, I missed that”, “You’re on mute”, “Can you say that again?”</div>
+      <div class="nav"><span class="time">6 min</span><button class="btn primary" onclick="goTo(1)">Next: vocabulary →</button></div>
+    </section>
+
+    <section class="sec" id="sec1">
+      <div class="sh">Stage 2 — Vocabulary 1</div><div class="st">Call vocabulary</div><div class="ss">8 minutes · Gap-fill</div>
+      <div class="tip">Click a word, then click a blank.</div><div class="grid" id="wordBank"></div><div id="gapFeedback" class="fb"></div><div class="card"><p class="mini" style="margin-bottom:12px">Complete the sentences.</p><div id="gapSentences"></div></div>
+      <div class="nav"><button class="btn" onclick="goTo(0)">← back</button><div class="right"><span class="time">8 min</span><button class="btn" onclick="checkGaps()">Check</button><button class="btn primary" onclick="goTo(2)">Next →</button></div></div>
+    </section>
+
+    <section class="sec" id="sec2">
+      <div class="sh">Stage 3 — Vocabulary 2</div><div class="st">Match problems and solutions</div><div class="ss">8 minutes · Matching exercise</div>
+      <div class="card"><p class="mini" style="margin-bottom:12px">Choose the best solution for each call problem.</p><div id="matchWrap"></div><div id="matchFeedback" class="fb"></div><button class="btn" onclick="checkMatch()">Check matching</button></div>
+      <div class="nav"><button class="btn" onclick="goTo(1)">← back</button><div class="right"><span class="time">8 min</span><button class="btn primary" onclick="goTo(3)">Next →</button></div></div>
+    </section>
+
+    <section class="sec" id="sec3">
+      <div class="sh">Stage 4 — Useful phrases</div><div class="st">What to say on a call</div><div class="ss">8 minutes · Study and practise</div><div id="funcContent"></div>
+      <div class="nav"><button class="btn" onclick="goTo(2)">← back</button><div class="right"><span class="time">8 min</span><button class="btn primary" onclick="goTo(4)">Next →</button></div></div>
+    </section>
+
+    <section class="sec" id="sec4">
+      <div class="sh">Stage 5 — Grammar 1</div><div class="st">Can you...? / Could you...?</div><div class="ss">8 minutes · Build polite requests</div>
+      <div class="card"><p class="mini" style="margin-bottom:12px">Make polite call requests. Choose the correct answer.</p><div id="drillWrap"></div></div>
+      <div class="nav"><button class="btn" onclick="goTo(3)">← back</button><div class="right"><span class="time">8 min</span><button class="btn primary" id="drillNextBtn" onclick="goTo(5)" style="display:none">Next →</button></div></div>
+    </section>
+
+    <section class="sec" id="sec5">
+      <div class="sh">Stage 6 — Grammar 2</div><div class="st">Present continuous for call problems</div><div class="ss">8 minutes · Form practice</div>
+      <div class="card"><p class="mini" style="margin-bottom:12px">Use <strong>is/are + verb-ing</strong> for problems happening now.</p><div id="grammar2"></div><div id="grammar2Feedback" class="fb"></div><button class="btn" onclick="checkGrammar2()">Check answers</button></div>
+      <div class="nav"><button class="btn" onclick="goTo(4)">← back</button><div class="right"><span class="time">8 min</span><button class="btn primary" onclick="goTo(6)">Next →</button></div></div>
+    </section>
+
+    <section class="sec" id="sec6">
+      <div class="sh">Stage 7 — Role play</div><div class="st">A short video call</div><div class="ss">10 minutes · Pair work</div>
+      <div class="tip"><strong>How to use:</strong> Pretend you are on a video call. Use polite phrases for problems and repetition.</div><div id="roleplayContent"></div>
+      <div class="nav"><button class="btn" onclick="goTo(5)">← back</button><div class="right"><span class="time">10 min</span><button class="btn primary" onclick="goTo(7)">Finish →</button></div></div>
+    </section>
+
+    <section class="sec" id="sec7">
+      <div class="sh">Stage 8 — Review</div><div class="st">Lesson complete!</div><div class="ss">4 minutes · Review and homework</div><div id="summaryContent"></div>
+      <div class="nav"><button class="btn" onclick="goTo(6)">← back</button><button class="btn primary" onclick="restartLesson()">Start again ↺</button></div>
+    </section>
+  </div>
+</div>
+<script>
+let current=0, selected=null, drillIndex=0, drillScore=0, drillDone=false;
+const stages=8;
+const WORDS=[
+ {word:'mute',def:'turn off your microphone'}, {word:'unmute',def:'turn your microphone on'}, {word:'connection',def:'the internet signal'}, {word:'screen',def:'the display'}, {word:'camera',def:'lets people see you'}, {word:'frozen',def:'not moving'}, {word:'host',def:'person who starts the call'}, {word:'dial in',def:'join by phone'}, {word:'link',def:'web address for the meeting'}, {word:'repeat',def:'say again'}];
+const GAPS=[
+ {id:'g0',before:'You are on ',blank:'mute',after:'. I cannot hear you.'},
+ {id:'g1',before:'Please ',blank:'unmute',after:' yourself and say that again.'},
+ {id:'g2',before:'The ',blank:'connection',after:' is bad. Your voice is cutting out.'},
+ {id:'g3',before:'Can you share your ',blank:'screen',after:'?'},
+ {id:'g4',before:'Please turn on your ',blank:'camera',after:'.'},
+ {id:'g5',before:'Your video is ',blank:'frozen',after:'.'},
+ {id:'g6',before:'The ',blank:'host',after:' will send the meeting link.'},
+ {id:'g7',before:'I cannot join online. I will ',blank:'dial in',after:' by phone.'},
+ {id:'g8',before:'Can you send me the meeting ',blank:'link',after:'?'},
+ {id:'g9',before:'Sorry, can you ',blank:'repeat',after:' that, please?'}];
+const MATCH=[
+ {p:'I cannot hear you.',s:'Check your microphone / unmute.'},
+ {p:'Your video is frozen.',s:'Turn your camera off and on again.'},
+ {p:'The connection is bad.',s:'Try reconnecting.'},
+ {p:'I cannot see the file.',s:'Share your screen.'},
+ {p:'I missed that.',s:'Say it again slowly.'},
+];
+const FUNC=[
+ {label:'Starting',phrases:['Hello everyone. Can you hear me?','Is everyone here?','Let’s start.','Just give me a moment.']},
+ {label:'Problems',phrases:['Sorry, I can’t hear you.','I think you’re on mute.','Your video is frozen.','The connection is bad.']},
+ {label:'Asking again',phrases:['Sorry, I missed that.','Can you say that again, please?','Can you speak more slowly?','Did you say Tuesday or Thursday?']},
+ {label:'Giving an update',phrases:['The report is finished.','I sent it by email this morning.','The deadline is Friday.','The next step is to check the document.']},
+ {label:'Ending',phrases:['I think that’s everything.','Thanks for your time.','I’ll send an email after the call.','Have a good day!']},
+];
+const DRILL=[
+ {q:'Make a polite request: ___ repeat that, please?',opts:['Can you','You can','Can to you','Do you can'],ans:0,explain:'Use: Can you + verb? “Can you repeat that?”'},
+ {q:'Choose the correct sentence.',opts:['Can you share your screen?','Can you sharing your screen?','Can share you screen?','Can you to share your screen?'],ans:0,explain:'After can, use the base verb: share.'},
+ {q:'Make this more polite: “Say it again.”',opts:['Can you say that again, please?','You say again.','Say again please you.','Can you saying again?'],ans:0,explain:'Add “Can you...” and “please”.'},
+ {q:'Choose the correct sentence.',opts:['Could you speak more slowly?','Could you to speak slowly?','Could speaking slowly?','Could you speaking?'],ans:0,explain:'After could, use the base verb: speak.'},
+ {q:'You want someone to wait. What do you say?',opts:['Just give me a moment.','You wait moment.','Give moment me.','I moment now.'],ans:0,explain:'“Just give me a moment” is natural and polite.'},
+ {q:'Someone is on mute. What do you say?',opts:['I think you’re on mute.','I think you mute are.','You are mute on.','I think mute you.'],ans:0,explain:'Say: “You’re on mute.”'},
+];
+const G2=[
+ {text:'Your video ___ (freeze).',ans:'is freezing'},
+ {text:'The sound ___ (cut out).',ans:'is cutting out'},
+ {text:'People ___ (wait) in the call.',ans:'are waiting'},
+ {text:'I ___ (share) my screen now.',ans:'am sharing'},
+ {text:'You ___ (speak) too fast.',ans:'are speaking'},
+];
+const ROLE=[
+ {sp:'A',text:'[Start the call. Say hello. Ask if Student B can hear you.]'},
+ {sp:'B',text:'[Say yes, but Student A’s video is frozen. Ask them to turn the camera off and on.]'},
+ {sp:'A',text:'[Say sorry. Turn the camera off and on. Ask: “Can you see me now?”]'},
+ {sp:'B',text:'Yes, I can see you now. But I think you are on mute. I can’t hear you.'},
+ {sp:'A',text:'[Unmute. Apologise. Give your update: the report is finished and you sent it this morning.]'},
+ {sp:'B',text:'[Say you missed the last part. Ask Student A to repeat it slowly.]'},
+ {sp:'A',text:'[Repeat slowly. Then share your screen and show the deadline: Friday at 5pm.]'},
+ {sp:'B',text:'[Say you can see the screen. Ask for the next meeting time.]'},
+ {sp:'A',text:'[Suggest Tuesday at 2pm. Ask if it works for Student B.]'},
+ {sp:'B',text:'Tuesday at 2pm works for me. Thanks!'},
+ {sp:'A',text:'[End the call politely. Say you will send an email after the call.]'},
+];
+function initProgress(){let h='';for(let i=0;i<stages;i++){h+=`<div class="dot ${i===0?'active':''}" onclick="goTo(${i})">${i+1}</div>`;if(i<stages-1)h+='<div class="line"></div>';}document.getElementById('progress').innerHTML=h;}
+function goTo(n){document.querySelectorAll('.sec').forEach((s,i)=>s.classList.toggle('active',i===n));document.querySelectorAll('.dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});current=n;if(n===1)buildGaps();if(n===2)buildMatch();if(n===3)buildFunc();if(n===4&&!drillDone)startDrill();if(n===5)buildGrammar2();if(n===6)buildRole();if(n===7)buildSummary();window.scrollTo({top:0,behavior:'smooth'});}
+function buildGaps(){const bank=document.getElementById('wordBank');bank.innerHTML='';WORDS.forEach(w=>{let c=document.createElement('div');c.className='chip';c.textContent=w.word;c.title=w.def;c.id='chip_'+w.word.replace(/\s/g,'_');c.onclick=()=>selectWord(w.word);bank.appendChild(c);});const cont=document.getElementById('gapSentences');cont.innerHTML='';GAPS.forEach(g=>{let p=document.createElement('p');p.className='sent';p.innerHTML=g.before+`<span class="gap" id="${g.id}" onclick="fillGap('${g.id}')"></span>`+g.after;cont.appendChild(p);});}
+function selectWord(w){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));if(selected===w){selected=null;return;}selected=w;document.getElementById('chip_'+w.replace(/\s/g,'_')).classList.add('selected');}
+function fillGap(id){let gap=document.getElementById(id);let cur=gap.textContent.trim();if(cur){let c=document.getElementById('chip_'+cur.replace(/\s/g,'_'));if(c)c.classList.remove('used');gap.textContent='';gap.classList.remove('correct','wrong');return;}if(!selected)return;gap.textContent=selected;let chip=document.getElementById('chip_'+selected.replace(/\s/g,'_'));chip.classList.add('used');selected=null;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));}
+function checkGaps(){let ok=0;GAPS.forEach(g=>{let val=document.getElementById(g.id).textContent.trim();let el=document.getElementById(g.id);if(val===g.blank){ok++;el.classList.add('correct');el.classList.remove('wrong');}else if(val){el.classList.add('wrong');el.classList.remove('correct');}});let fb=document.getElementById('gapFeedback');fb.className='fb show '+(ok===GAPS.length?'ok':'err');fb.textContent=ok===GAPS.length?'All correct! Well done.':ok+' of '+GAPS.length+' correct. Try again.';}
+function buildMatch(){let opts=MATCH.map(m=>m.s);let h='';MATCH.forEach((m,i)=>{h+=`<div class="matchrow"><div class="muted" style="margin:0"><strong>Problem ${i+1}</strong><br><span class="mini">${m.p}</span></div><select id="m${i}"><option value="">Choose a solution</option>${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select></div>`;});document.getElementById('matchWrap').innerHTML=h;}
+function checkMatch(){let ok=0;MATCH.forEach((m,i)=>{if(document.getElementById('m'+i).value===m.s)ok++;});let fb=document.getElementById('matchFeedback');fb.className='fb show '+(ok===MATCH.length?'ok':'err');fb.textContent=ok===MATCH.length?'All correct!':'You got '+ok+' of '+MATCH.length+'. Check the solutions again.';}
+function buildFunc(){let h='';FUNC.forEach(cat=>{h+=`<div class="card"><p style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);margin-bottom:10px">${cat.label}</p>`;cat.phrases.forEach(p=>h+=`<div class="phrase"><span class="bullet"></span><span>${p}</span></div>`);h+='</div>';});h+='<div class="tip">Practise each phrase aloud. For B1 learners, clear call management phrases help keep the conversation professional.</div>';document.getElementById('funcContent').innerHTML=h;}
+function startDrill(){drillIndex=0;drillScore=0;renderDrill();}
+function renderDrill(){let w=document.getElementById('drillWrap');if(drillIndex>=DRILL.length){drillDone=true;document.getElementById('drillNextBtn').style.display='inline-block';w.innerHTML=`<div style="text-align:center"><div class="score"><strong>${drillScore}/${DRILL.length}</strong><span>score</span></div><p>${drillScore>=5?'Great work!':'Good try. Review the phrases.'}</p></div>`;return;}let q=DRILL[drillIndex];w.innerHTML=`<p class="counter">Question ${drillIndex+1} of ${DRILL.length}</p><p style="font-weight:700;margin-bottom:12px">${q.q}</p><div class="opts">${q.opts.map((o,i)=>`<button class="opt" onclick="answerDrill(${i})">${o}</button>`).join('')}</div><div id="drillExplain" class="explain"></div><button id="drillContinue" class="btn primary" style="display:none;margin-top:12px" onclick="nextDrill()">Next question →</button>`;}
+function answerDrill(ch){let q=DRILL[drillIndex];document.querySelectorAll('.opt').forEach(b=>b.disabled=true);document.querySelectorAll('.opt')[q.ans].classList.add('correct');let e=document.getElementById('drillExplain');e.style.display='block';if(ch===q.ans){drillScore++;e.className='explain ok';e.textContent='Correct! '+q.explain;}else{document.querySelectorAll('.opt')[ch].classList.add('wrong');e.className='explain err';e.textContent='Not quite. '+q.explain;}document.getElementById('drillContinue').style.display='inline-block';}
+function nextDrill(){drillIndex++;renderDrill();}
+function buildGrammar2(){let h='';G2.forEach((g,i)=>{h+=`<p class="sent">${i+1}. ${g.text.replace('___',`<input id="g2_${i}" style="border:1px solid var(--bdr2);border-radius:10px;padding:7px 9px;background:var(--bg);color:var(--txt);min-width:130px">`)}</p>`;});document.getElementById('grammar2').innerHTML=h;}
+function checkGrammar2(){let ok=0;G2.forEach((g,i)=>{let inp=document.getElementById('g2_'+i);if(inp.value.trim().toLowerCase()===g.ans){ok++;inp.style.borderColor='#4a8f3b';}else{inp.style.borderColor='#c84242';}});let fb=document.getElementById('grammar2Feedback');fb.className='fb show '+(ok===G2.length?'ok':'err');fb.textContent=ok===G2.length?'All correct!':ok+' of '+G2.length+' correct. Answers: '+G2.map(x=>x.ans).join(', ')+'.';}
+function buildRole(){let h='<div class="rolegrid"><div class="card rolea"><div class="label">Student A — Host</div><p>Start the call, fix camera/mute problems, give the report update, share your screen, and suggest the next meeting time.</p></div><div class="card roleb"><div class="label">Student B — Participant</div><p>Tell Student A about technical problems, ask for repetition, ask to see the screen, and agree on the next meeting time.</p></div></div>';ROLE.forEach(r=>{h+=`<div class="${r.sp==='A'?'rolelineA':'rolelineB'}"><div class="label">Student ${r.sp}</div>${r.text}</div>`;});h+='<div class="muted"><strong>Extension:</strong> Swap roles. New problem: the meeting link does not work and one person needs to dial in by phone.</div>';document.getElementById('roleplayContent').innerHTML=h;}
+function buildSummary(){let items=['10 call vocabulary words','Problem-solution matching practice','Useful phrases for starting, fixing problems, asking again, giving updates, and ending','Grammar: Can you...? Could you...? and present continuous for problems','A realistic call role play'];let hw=['Write 6 call problem sentences: “I can’t hear you”, “Your video is frozen”, etc.','Write a short message before a call with the time, link, and topic.','Practise the role play again and change the problem.'];document.getElementById('summaryContent').innerHTML=`<div class="card" style="text-align:center"><div class="lvl">B1 — 60 minutes</div><h2 style="margin-top:8px">Conference Calls</h2><p class="mini">Review complete</p></div><div class="card"><strong>What you practised:</strong>${items.map(i=>`<div class="phrase"><span class="bullet"></span><span>${i}</span></div>`).join('')}</div><div class="muted"><strong>Homework:</strong>${hw.map((i,n)=>`<div class="phrase"><span class="bullet"></span><span>${n+1}. ${i}</span></div>`).join('')}</div><div class="tip">Well done. The most useful call phrases are short, polite, and easy to say quickly.</div>`;}
+function restartLesson(){drillDone=false;drillScore=0;drillIndex=0;selected=null;goTo(0);}
+initProgress();buildGaps();buildMatch();buildFunc();buildRole();buildSummary();
+</script>
+</body>
+</html>
